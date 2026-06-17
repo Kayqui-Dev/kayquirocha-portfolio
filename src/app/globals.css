@@ -65,7 +65,8 @@ html {
 }
 
 body {
-  background-color: var(--background);
+  background: radial-gradient(circle at center, #121215 0%, #000000 100%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans);
   min-height: 100vh;
