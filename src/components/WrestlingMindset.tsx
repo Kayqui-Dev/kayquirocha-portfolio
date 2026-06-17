@@ -1,4 +1,20 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 export default function WrestlingMindset() {
+  const revealVariants = {
+    hidden: { opacity: 0, y: 30 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1] as const,
+      },
+    },
+  };
+
   const COMPARISONS = [
     {
       title: "Consistência Diária",
@@ -21,12 +37,18 @@ export default function WrestlingMindset() {
     <section id="mindset" className="py-32 md:py-48 border-t border-white/[0.05] bg-[#000000]">
       <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Left column: Text narrative and NTG badge */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
+        <motion.div
+          variants={revealVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="lg:col-span-5 flex flex-col gap-6"
+        >
           <div className="flex flex-col gap-4">
             <span className="section-tag">05 / Mindset de Atleta</span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none">
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none font-serif">
               A Disciplina do Tatame <br />
-              <span className="text-red-500">na Engenharia.</span>
+              <span className="text-red-500 font-serif">na Engenharia.</span>
             </h2>
             <div className="w-12 h-[2px] bg-red-500 mt-2"></div>
           </div>
@@ -45,7 +67,7 @@ export default function WrestlingMindset() {
           </blockquote>
 
           {/* NTG / Medals Stats Badge */}
-          <div className="flex items-center gap-4 p-4 rounded-sm bg-red-950/[0.03] border border-red-500/10 w-fit">
+          <div className="flex items-center gap-4 p-4 rounded-sm bg-red-950/[0.03] border border-red-500/10 w-fit select-none">
             <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-sm font-bold font-mono">
               ★
             </div>
@@ -54,20 +76,25 @@ export default function WrestlingMindset() {
               <p className="text-[10px] text-zinc-500">Atleta de Luta Livre / Medalhista de Torneios</p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right column: Comparison grid */}
         <div className="lg:col-span-7 flex flex-col gap-4">
           {COMPARISONS.map((item, index) => (
-            <div
+            <motion.div
               key={item.title}
-              className="p-6 rounded-sm bg-white/[0.01] border border-white/[0.03] hover:border-red-500/10 hover:bg-red-950/[0.01] transition-all duration-300 group"
+              variants={revealVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: index * 0.15 }}
+              className="p-6 rounded-sm bg-white/[0.01] border border-white/[0.03] hover:border-red-500/10 hover:bg-red-950/[0.01] transition-all duration-300 group select-none"
             >
               <div className="flex items-center gap-3 mb-4">
                 <span className="font-mono text-xs text-red-500 font-bold">
                   0{index + 1}
                 </span>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-sans">
                   {item.title}
                 </h3>
               </div>
@@ -86,7 +113,7 @@ export default function WrestlingMindset() {
                   <p className="text-zinc-300">{item.code}</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

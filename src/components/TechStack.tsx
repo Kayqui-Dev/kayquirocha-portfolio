@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 const STACK_ITEMS = [
   {
     name: "React / Next.js",
@@ -82,26 +86,49 @@ const STACK_ITEMS = [
 ];
 
 export default function TechStack() {
+  const revealVariants = {
+    hidden: { opacity: 0, y: 30 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1] as const,
+      },
+    },
+  };
+
   return (
     <section id="stack" className="py-32 md:py-48 border-t border-white/[0.05] bg-[#000000]">
       <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-12">
         {/* Section Header */}
-        <div className="flex flex-col gap-4">
+        <motion.div
+          variants={revealVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="flex flex-col gap-4"
+        >
           <span className="section-tag">02 / Tech Stack</span>
           <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none font-serif">
             Arsenal Tecnológico
           </h2>
-          <p className="text-zinc-400 text-sm max-w-xl">
+          <p className="text-zinc-400 text-sm max-w-xl font-sans">
             Ferramentas e tecnologias selecionadas para criar soluções robustas, automatizadas e de alta performance.
           </p>
-        </div>
+        </motion.div>
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {STACK_ITEMS.map((tech) => (
-            <div
+          {STACK_ITEMS.map((tech, idx) => (
+            <motion.div
               key={tech.name}
-              className="p-5 rounded-sm bg-white/[0.01] border border-white/[0.03] hover:border-white/[0.1] hover:bg-white/[0.03] transition-all duration-300 flex flex-col justify-between group"
+              variants={revealVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: idx * 0.1 }}
+              className="p-5 rounded-sm bg-white/[0.01] border border-white/[0.03] hover:border-white/[0.1] hover:bg-white/[0.03] transition-all duration-300 flex flex-col justify-between group select-none"
             >
               <div>
                 {/* Header info */}
@@ -115,7 +142,7 @@ export default function TechStack() {
                 </div>
 
                 {/* Name */}
-                <h3 className="text-sm font-semibold text-white tracking-tight mb-2">
+                <h3 className="text-sm font-semibold text-white tracking-tight mb-2 font-mono">
                   {tech.name}
                 </h3>
 
@@ -124,7 +151,7 @@ export default function TechStack() {
                   {tech.desc}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

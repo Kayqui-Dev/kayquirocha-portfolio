@@ -1,8 +1,24 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 export default function Contact() {
+  const revealVariants = {
+    hidden: { opacity: 0, y: 30 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1] as const,
+      },
+    },
+  };
+
   const CONTACT_LINKS = [
     {
       name: "GitHub",
-      href: "https://github.com", // User can replace with their real profile
+      href: "https://github.com",
       detail: "@kayquirocha",
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -12,7 +28,7 @@ export default function Contact() {
     },
     {
       name: "LinkedIn",
-      href: "https://linkedin.com", // User can replace with their real profile
+      href: "https://linkedin.com",
       detail: "Kayqui Rocha Godinho",
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,7 +48,7 @@ export default function Contact() {
     },
     {
       name: "WhatsApp",
-      href: "https://wa.me/5511999999999", // User can replace with their real number
+      href: "https://wa.me/5511999999999",
       detail: "Enviar mensagem",
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,7 +62,13 @@ export default function Contact() {
     <section id="contato" className="py-32 md:py-48 border-t border-white/[0.05] bg-[#000000]">
       <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-16">
         {/* Contact Header */}
-        <div className="text-center max-w-xl mx-auto flex flex-col gap-4">
+        <motion.div
+          variants={revealVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="text-center max-w-xl mx-auto flex flex-col gap-4"
+        >
           <span className="section-tag">06 / Contato</span>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none font-serif">
             Vamos construir o próximo pódio juntos?
@@ -55,28 +77,33 @@ export default function Contact() {
             Seja para desenvolver um sistema sob medida com IA, automatizar fluxos complexos da sua empresa, 
             ou trocar ideias sobre engenharia de software e Wrestling, sinta-se à vontade para se conectar.
           </p>
-        </div>
+        </motion.div>
 
         {/* Contact Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {CONTACT_LINKS.map((link) => (
-            <a
+          {CONTACT_LINKS.map((link, idx) => (
+            <motion.a
               key={link.name}
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-6 rounded-sm bg-white/[0.01] border border-white/[0.03] hover:border-white/[0.1] hover:bg-white/[0.02] transition-all duration-300 flex flex-col items-center text-center group"
+              variants={revealVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: idx * 0.1 }}
+              className="p-6 rounded-sm bg-white/[0.01] border border-white/[0.03] hover:border-white/[0.1] hover:bg-white/[0.02] transition-all duration-300 flex flex-col items-center text-center group select-none"
             >
               <div className="w-10 h-10 rounded-full bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-zinc-400 group-hover:text-red-500 group-hover:border-red-500/20 transition-all duration-300 mb-4">
                 {link.icon}
               </div>
-              <h3 className="text-sm font-semibold text-white tracking-tight mb-1">
+              <h3 className="text-sm font-semibold text-white tracking-tight mb-1 font-sans">
                 {link.name}
               </h3>
               <p className="text-xs font-mono text-zinc-500 group-hover:text-zinc-300 transition-colors duration-300">
                 {link.detail}
               </p>
-            </a>
+            </motion.a>
           ))}
         </div>
 
