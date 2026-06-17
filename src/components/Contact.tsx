@@ -48,7 +48,7 @@ export default function Contact() {
         {/* Contact Header */}
         <div className="text-center max-w-xl mx-auto flex flex-col gap-4">
           <span className="section-tag">06 / Contato</span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none">
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none font-serif">
             Vamos construir o próximo pódio juntos?
           </h2>
           <p className="text-sm text-zinc-400 leading-relaxed font-sans">

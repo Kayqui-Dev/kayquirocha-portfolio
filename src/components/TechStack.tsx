@@ -88,7 +88,7 @@ export default function TechStack() {
         {/* Section Header */}
         <div className="flex flex-col gap-4">
           <span className="section-tag">02 / Tech Stack</span>
-          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none">
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none font-serif">
             Arsenal Tecnológico
           </h2>
           <p className="text-zinc-400 text-sm max-w-xl">

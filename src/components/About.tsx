@@ -5,7 +5,7 @@ export default function About() {
         {/* Section Header */}
         <div className="flex flex-col gap-4 mb-20">
           <span className="section-tag">01 / Sobre Mim</span>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter text-white leading-none">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter text-white leading-none font-serif">
             Entre o código e o tatame.
           </h2>
           <div className="w-12 h-[2px] bg-red-500"></div>

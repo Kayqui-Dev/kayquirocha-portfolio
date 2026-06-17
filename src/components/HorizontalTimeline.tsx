@@ -58,7 +58,7 @@ export default function HorizontalTimeline() {
         {/* Section Title */}
         <div className="flex flex-col gap-4">
           <span className="section-tag">01.2 / Trajetória</span>
-          <h2 className="text-3xl font-bold tracking-tight text-white">
+          <h2 className="text-3xl font-extrabold tracking-tighter text-white leading-none font-serif">
             Linha do Tempo
           </h2>
           <p className="text-sm text-zinc-400 max-w-xl font-sans">
