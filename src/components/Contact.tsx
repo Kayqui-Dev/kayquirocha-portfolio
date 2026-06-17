@@ -43,8 +43,8 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contato" className="py-32 px-6 max-w-5xl mx-auto border-t border-white/[0.05] mt-12">
-      <div className="flex flex-col gap-16">
+    <section id="contato" className="py-32 md:py-48 border-t border-white/[0.05] bg-[#000000]">
+      <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-16">
         {/* Contact Header */}
         <div className="text-center max-w-xl mx-auto flex flex-col gap-4">
           <span className="section-tag">06 / Contato</span>

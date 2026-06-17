@@ -34,8 +34,8 @@ const PROJECTS = [
 
 export default function Projects() {
   return (
-    <section id="projetos" className="py-32 px-6 max-w-5xl mx-auto border-t border-white/[0.05]">
-      <div className="flex flex-col gap-20">
+    <section id="projetos" className="py-32 md:py-48 border-t border-white/[0.05] bg-[#000000]">
+      <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-20">
         {/* Experience Section */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           <div className="md:col-span-4 flex flex-col gap-4">

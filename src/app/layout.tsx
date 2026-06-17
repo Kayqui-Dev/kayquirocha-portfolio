@@ -56,7 +56,7 @@ export default function RootLayout({
       <head>
         <meta name="color-scheme" content="dark" />
       </head>
-      <body className="min-h-full flex flex-col bg-[#09090b] text-[#f4f4f5]">
+      <body className="min-h-full flex flex-col bg-[#000000] text-[#f4f4f5]">
         {children}
       </body>
     </html>

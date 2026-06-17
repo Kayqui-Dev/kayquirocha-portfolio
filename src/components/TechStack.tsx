@@ -83,12 +83,12 @@ const STACK_ITEMS = [
 
 export default function TechStack() {
   return (
-    <section id="stack" className="py-32 px-6 max-w-5xl mx-auto border-t border-white/[0.05]">
-      <div className="flex flex-col gap-12">
+    <section id="stack" className="py-32 md:py-48 border-t border-white/[0.05] bg-[#000000]">
+      <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-12">
         {/* Section Header */}
         <div className="flex flex-col gap-4">
           <span className="section-tag">02 / Tech Stack</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tighter text-white leading-none">
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none">
             Arsenal Tecnológico
           </h2>
           <p className="text-zinc-400 text-sm max-w-xl">

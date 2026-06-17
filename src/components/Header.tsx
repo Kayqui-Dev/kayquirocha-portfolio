@@ -32,11 +32,11 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-[#09090b]/80 backdrop-blur-md border-b border-white/[0.06] py-4"
+          ? "bg-[#000000]/80 backdrop-blur-md border-b border-white/[0.06] py-4"
           : "bg-transparent py-6"
       }`}
     >
-      <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 flex items-center justify-between">
         {/* Logo */}
         <a
           href="#"
@@ -97,9 +97,8 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Navigation Dropdown */}
       <div
-        className={`md:hidden absolute top-full left-0 right-0 border-b border-white/[0.06] bg-[#09090b]/95 backdrop-blur-lg transition-all duration-300 ${
+        className={`md:hidden absolute top-full left-0 right-0 border-b border-white/[0.06] bg-[#000000]/95 backdrop-blur-lg transition-all duration-300 ${
           isMobileMenuOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 -translate-y-2 pointer-events-none"

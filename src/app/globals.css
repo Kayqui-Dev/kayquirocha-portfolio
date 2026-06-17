@@ -32,10 +32,10 @@
   color-scheme: dark;
   
   /* Monochromatic Premium Color Palette (Dark Theme First) */
-  --background: #09090b; /* zinc-950 */
+  --background: #000000; /* Pure Black */
   --foreground: #f4f4f5; /* zinc-100 */
   
-  --card: #18181b; /* zinc-900 */
+  --card: #09090b; /* zinc-950 */
   --card-foreground: #e4e4e7; /* zinc-200 */
   
   --border: rgba(255, 255, 255, 0.06);

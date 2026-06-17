@@ -53,8 +53,8 @@ export default function HorizontalTimeline() {
   };
 
   return (
-    <section className="py-24 px-6 max-w-5xl mx-auto border-t border-white/[0.05] overflow-hidden">
-      <div className="flex flex-col gap-12">
+    <section className="py-32 md:py-48 border-t border-white/[0.05] overflow-hidden bg-[#000000]">
+      <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-12">
         {/* Section Title */}
         <div className="flex flex-col gap-4">
           <span className="section-tag">01.2 / Trajetória</span>
