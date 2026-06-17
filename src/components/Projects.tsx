@@ -34,13 +34,13 @@ const PROJECTS = [
 
 export default function Projects() {
   return (
-    <section id="projetos" className="py-24 px-6 max-w-5xl mx-auto border-t border-white/[0.05]">
+    <section id="projetos" className="py-32 px-6 max-w-5xl mx-auto border-t border-white/[0.05]">
       <div className="flex flex-col gap-20">
         {/* Experience Section */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           <div className="md:col-span-4 flex flex-col gap-4">
             <span className="section-tag">03 / Experiência</span>
-            <h2 className="text-3xl font-bold tracking-tight text-white">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tighter text-white leading-none">
               Atuação no Mercado
             </h2>
             <p className="text-zinc-500 text-xs max-w-xs leading-relaxed">
@@ -83,7 +83,7 @@ export default function Projects() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start pt-12 border-t border-white/[0.03]">
           <div className="md:col-span-4 flex flex-col gap-4">
             <span className="section-tag">04 / Projetos</span>
-            <h2 className="text-3xl font-bold tracking-tight text-white">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tighter text-white leading-none">
               Projetos Autorais
             </h2>
             <p className="text-zinc-500 text-xs max-w-xs leading-relaxed">

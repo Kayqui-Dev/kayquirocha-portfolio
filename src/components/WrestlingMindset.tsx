@@ -18,13 +18,13 @@ export default function WrestlingMindset() {
   ];
 
   return (
-    <section id="mindset" className="py-24 px-6 max-w-5xl mx-auto border-t border-white/[0.05]">
+    <section id="mindset" className="py-32 px-6 max-w-5xl mx-auto border-t border-white/[0.05]">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Left column: Text narrative and NTG badge */}
         <div className="lg:col-span-5 flex flex-col gap-6">
           <div className="flex flex-col gap-4">
             <span className="section-tag">05 / Mindset de Atleta</span>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none">
               A Disciplina do Tatame <br />
               <span className="text-red-500">na Engenharia.</span>
             </h2>
