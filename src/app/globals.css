@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-wrestling: var(--wrestling-red);
+  
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-fade-in: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:root {
+  color-scheme: dark;
+  
+  /* Monochromatic Premium Color Palette (Dark Theme First) */
+  --background: #09090b; /* zinc-950 */
+  --foreground: #f4f4f5; /* zinc-100 */
+  
+  --card: #18181b; /* zinc-900 */
+  --card-foreground: #e4e4e7; /* zinc-200 */
+  
+  --border: rgba(255, 255, 255, 0.06);
+  --border-active: rgba(255, 255, 255, 0.15);
+  
+  --accent-primary: #ffffff;
+  --accent-secondary: #a1a1aa; /* zinc-400 */
+  
+  /* Wrestling theme color: Red (a subtle, premium Crimson/Scarlet representing physical combat energy) */
+  --wrestling-red: #ef4444; 
+  --wrestling-red-muted: rgba(239, 68, 68, 0.1);
+  
+  --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+  --scrollbar-track: rgba(0, 0, 0, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom premium scrollbar styling (Baseline 2025 Standard) */
+html {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
+}
+
+/* Selection highlight */
+::selection {
+  background-color: var(--accent-primary);
+  color: #000000;
+}
+
+/* Glassmorphism helpers */
+.glass-effect {
+  background: rgba(9, 9, 11, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+.glass-card {
+  background: rgba(24, 24, 27, 0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(24, 24, 27, 0.6);
+  border-color: var(--border-active);
+  transform: translateY(-2px);
+}
+
+/* Subtitle / Label text */
+.section-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+}

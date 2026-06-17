@@ -1,0 +1,95 @@
+export default function Contact() {
+  const CONTACT_LINKS = [
+    {
+      name: "GitHub",
+      href: "https://github.com", // User can replace with their real profile
+      detail: "@kayquirocha",
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        </svg>
+      ),
+    },
+    {
+      name: "LinkedIn",
+      href: "https://linkedin.com", // User can replace with their real profile
+      detail: "Kayqui Rocha Godinho",
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      ),
+    },
+    {
+      name: "E-mail",
+      href: "mailto:kayquirocha.dev@gmail.com",
+      detail: "kayquirocha.dev@gmail.com",
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      ),
+    },
+    {
+      name: "WhatsApp",
+      href: "https://wa.me/5511999999999", // User can replace with their real number
+      detail: "Enviar mensagem",
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      ),
+    },
+  ];
+
+  return (
+    <section id="contato" className="py-24 px-6 max-w-5xl mx-auto border-t border-white/[0.05] mt-12">
+      <div className="flex flex-col gap-16">
+        {/* Contact Header */}
+        <div className="text-center max-w-xl mx-auto flex flex-col gap-4">
+          <span className="section-tag">06 / Contato</span>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+            Vamos construir o próximo pódio juntos?
+          </h2>
+          <p className="text-sm text-zinc-400 leading-relaxed font-sans">
+            Seja para desenvolver um sistema sob medida com IA, automatizar fluxos complexos da sua empresa, 
+            ou trocar ideias sobre engenharia de software e Wrestling, sinta-se à vontade para se conectar.
+          </p>
+        </div>
+
+        {/* Contact Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {CONTACT_LINKS.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-6 rounded-sm bg-white/[0.01] border border-white/[0.03] hover:border-white/[0.1] hover:bg-white/[0.02] transition-all duration-300 flex flex-col items-center text-center group"
+            >
+              <div className="w-10 h-10 rounded-full bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-zinc-400 group-hover:text-red-500 group-hover:border-red-500/20 transition-all duration-300 mb-4">
+                {link.icon}
+              </div>
+              <h3 className="text-sm font-semibold text-white tracking-tight mb-1">
+                {link.name}
+              </h3>
+              <p className="text-xs font-mono text-zinc-500 group-hover:text-zinc-300 transition-colors duration-300">
+                {link.detail}
+              </p>
+            </a>
+          ))}
+        </div>
+
+        {/* Footer info */}
+        <div className="flex flex-col sm:flex-row items-center justify-between border-t border-white/[0.05] pt-8 text-[10px] font-mono text-zinc-500 gap-4">
+          <p>© {new Date().getFullYear()} Kayqui Rocha Godinho. Todos os direitos reservados.</p>
+          <p className="flex items-center gap-1.5">
+            Construído com Next.js & Tailwind CSS
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+            Foco & Disciplina
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
