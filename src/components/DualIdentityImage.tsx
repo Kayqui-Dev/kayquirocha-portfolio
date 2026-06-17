@@ -14,21 +14,22 @@ export default function DualIdentityImage() {
     const reveal = revealRef.current;
     if (!container || !reveal) return;
 
+    // Set initial custom property values as numbers (centered, radius 0)
     gsap.set(reveal, {
       "--mask-x": 200,
       "--mask-y": 260,
       "--mask-r": 0,
     } as Record<string, number>);
 
-    // GSAP quickTo setters for ultra-smooth spring-like cursor tracking
+    // GSAP quickTo setters for ultra-smooth spring-like cursor tracking (0.15 duration for responsive feel)
     const xSetter = gsap.quickTo(reveal, "--mask-x", {
-      duration: 0.45,
-      ease: "power3.out",
+      duration: 0.15,
+      ease: "power2.out",
     });
 
     const ySetter = gsap.quickTo(reveal, "--mask-y", {
-      duration: 0.45,
-      ease: "power3.out",
+      duration: 0.15,
+      ease: "power2.out",
     });
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -40,17 +41,27 @@ export default function DualIdentityImage() {
       ySetter(y);
     };
 
-    const handleMouseEnter = () => {
-      // Grow the circle mask smoothly on hover (unitless, calc handles px)
+    const handleMouseEnter = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Instantly position the lens center at the cursor entry coordinates to prevent snapping
+      gsap.set(reveal, {
+        "--mask-x": x,
+        "--mask-y": y,
+      } as Record<string, number>);
+
+      // Smoothly expand the radius (150px as requested)
       gsap.to(reveal, {
-        "--mask-r": 140,
+        "--mask-r": 150,
         duration: 0.35,
         ease: "power2.out",
       });
     };
 
     const handleMouseLeave = () => {
-      // Shrink circle mask back to 0
+      // Smoothly shrink the radius back to 0px
       gsap.to(reveal, {
         "--mask-r": 0,
         duration: 0.4,
@@ -58,7 +69,7 @@ export default function DualIdentityImage() {
       });
     };
 
-    // Listeners for desktop hover reveal
+    // Attach mouse event listeners
     container.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseenter", handleMouseEnter);
     container.addEventListener("mouseleave", handleMouseLeave);
@@ -75,7 +86,7 @@ export default function DualIdentityImage() {
     if (!reveal) return;
 
     if (!isRevealedMobile) {
-      // Mobile reveal: Grow the mask from the center to fully reveal wrestling image (800px covers container)
+      // On mobile tap, expand mask from center to cover the whole box
       gsap.to(reveal, {
         "--mask-x": 200,
         "--mask-y": 260,
@@ -85,7 +96,7 @@ export default function DualIdentityImage() {
       });
       setIsRevealedMobile(true);
     } else {
-      // Mobile hide: Reset mask back to 0
+      // Toggle back to hidden
       gsap.to(reveal, {
         "--mask-r": 0,
         duration: 0.5,
@@ -101,8 +112,8 @@ export default function DualIdentityImage() {
       onClick={handleMobileClick}
       className="relative aspect-[3/4] w-full max-w-sm rounded-2xl overflow-hidden border border-white/10 bg-[#000000] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)] group cursor-pointer select-none"
     >
-      {/* Camada Base: Foto A - Developer Persona (Visible by default) */}
-      <div className="absolute inset-0 w-full h-full">
+      {/* Foto A: Dev Persona (Base / Bottom Layer, z-0) */}
+      <div className="absolute inset-0 w-full h-full z-0">
         <Image
           src="/kayqui_developer.jpg"
           alt="Kayqui Rocha - Dev Tech"
@@ -117,7 +128,7 @@ export default function DualIdentityImage() {
         </div>
       </div>
 
-      {/* Camada Superior (Frente): Foto B - Wrestling Athlete (Revealed via GSAP Clip-Path Circle) */}
+      {/* Foto B: Wrestling Persona (Top Layer, z-10, clipped dynamically) */}
       <div
         ref={revealRef}
         className="absolute inset-0 z-10 w-full h-full pointer-events-none"
@@ -142,7 +153,7 @@ export default function DualIdentityImage() {
         </div>
       </div>
 
-      {/* Instruction Overlay when not hovered */}
+      {/* Instruction Overlay */}
       <div className="absolute top-5 left-1/2 -translate-x-1/2 bg-black/85 border border-white/10 rounded-full px-4 py-1.5 backdrop-blur-sm pointer-events-none transition-opacity duration-300 group-hover:opacity-0 z-20 shadow-lg">
         <p className="text-[9px] font-mono tracking-widest text-zinc-400 uppercase flex items-center gap-2 font-bold">
           <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
