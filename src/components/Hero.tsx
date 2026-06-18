@@ -1,84 +1,103 @@
-import DualIdentityImage from "./DualIdentityImage";
+"use client";
+
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 
 export default function Hero() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Track scroll position of the Hero container
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Scroll transforms for parallax, scale, and fade effects
+  const scale = useTransform(scrollYProgress, [0, 1], [1.05, 0.95]);
+  const imageOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [0.4, 0.1, 0]);
+  const textY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+
   return (
-    <section className="relative min-h-screen lg:h-screen lg:min-h-[850px] flex flex-col justify-center overflow-hidden bg-transparent">
-      {/* Visual background grid texture */}
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+    <div ref={containerRef} className="relative h-[150vh] w-full bg-black">
+      {/* Pinned Sticky Wrapper */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center items-center">
+        {/* Background Grid Texture */}
+        <div className="absolute inset-0 -z-20 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
 
-      {/* Decorative gradient glow */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-red-950/10 rounded-full blur-[120px] -z-10 animate-pulse-slow"></div>
-      <div className="absolute -left-20 bottom-1/4 w-80 h-80 bg-zinc-900/40 rounded-full blur-[100px] -z-10"></div>
+        {/* Parallax Background Trophy Image */}
+        <motion.div
+          style={{ scale, opacity: imageOpacity }}
+          className="absolute inset-0 w-full h-full -z-10 bg-[#000000]"
+        >
+          <Image
+            src="/kayqui_trophy.jpg"
+            alt="Kayqui Rocha Godinho - Conquista CBW"
+            fill
+            priority
+            className="object-cover filter grayscale contrast-110 brightness-[0.35]"
+          />
+          {/* Vercel-style bottom fade to Pure Black */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+        </motion.div>
 
-      {/* Main Container with Vercel Scale - Full Bleed Grid */}
-      <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center py-24 lg:py-0">
-        {/* Left Column: Content */}
-        <div className="lg:col-span-7 flex flex-col gap-8 animate-fade-in">
+        {/* Hero Copy Content */}
+        <motion.div
+          style={{ y: textY, opacity: textOpacity }}
+          className="z-10 flex flex-col items-center text-center px-6 max-w-4xl"
+        >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.02] w-fit">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.02] mb-8 backdrop-blur-sm select-none">
             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
-            <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase font-semibold">
-              Full-Stack Dev & Luta Livre Athlete
+            <span className="text-[9px] font-mono tracking-widest text-zinc-400 uppercase font-bold">
+              Full-Stack Dev & Wrestling Athlete
             </span>
           </div>
 
-          {/* Majestic Hero Title (Serif Font) */}
-          <h1 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter leading-[0.9] text-white font-serif">
-            Kayqui Rocha <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-zinc-400 to-zinc-600 font-serif">
-              Godinho
-            </span>
+          {/* Title (Playfair Serif Font) */}
+          <h1 className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter leading-[0.9] text-white font-serif uppercase">
+            Kayqui Rocha
           </h1>
+          <span className="text-xl sm:text-2xl md:text-3xl font-mono tracking-[0.2em] text-red-500 uppercase mt-4 block font-extrabold">
+            Godinho
+          </span>
 
-          {/* Subtitle / Copy */}
-          <p className="text-zinc-400 text-lg md:text-xl font-normal max-w-2xl leading-relaxed font-sans">
-            Desenvolvedor Full-Stack focado em construir aplicações web modernas,
-            sistemas escaláveis e automações inteligentes com IA. Trago a disciplina rigorosa,
-            a resiliência e o foco do tatame de Luta Livre Olímpica (Wrestling) para a precisão da engenharia de software.
+          {/* Short Bio Subtitle */}
+          <p className="text-zinc-400 text-sm sm:text-base md:text-lg font-normal max-w-2xl leading-relaxed mt-8 font-sans">
+            Fundador da Kodava Solutions & Zenithon Academy IA.
+            Trazendo a disciplina, consistência e o foco de atleta competitivo de Wrestling para a engenharia de software de alta performance.
           </p>
 
-          {/* Action Buttons (Aligned) */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-fit mt-2">
+          {/* Call-to-actions */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 mt-10 w-full sm:w-auto px-4 sm:px-0">
             <a
-              href="#projetos"
-              className="inline-flex h-12 items-center justify-center rounded-sm bg-white px-8 text-xs font-mono font-bold text-black uppercase hover:opacity-90 transition-opacity duration-300 w-full sm:w-auto text-center"
+              href="#sobre"
+              className="inline-flex h-11 items-center justify-center rounded-sm bg-white px-8 text-xs font-mono font-bold text-black uppercase hover:opacity-90 transition-opacity duration-300 w-full sm:w-auto text-center"
             >
-              Ver Projetos
+              Iniciar Exploração
             </a>
             <a
               href="#contato"
-              className="inline-flex h-12 items-center justify-center rounded-sm border border-zinc-800 bg-transparent px-8 text-xs font-mono text-zinc-400 uppercase hover:bg-white/[0.02] hover:border-zinc-700 transition-all duration-300 w-full sm:w-auto text-center"
+              className="inline-flex h-11 items-center justify-center rounded-sm border border-zinc-800 bg-black/45 px-8 text-xs font-mono text-zinc-400 uppercase hover:bg-white/[0.02] hover:border-zinc-700 transition-all duration-300 w-full sm:w-auto text-center"
             >
-              Entrar em Contato
+              Contato
             </a>
           </div>
+        </motion.div>
 
-          {/* Stat Grid - Technical text using font-mono */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8 pt-8 border-t border-white/5 mt-4">
-            <div>
-              <p className="text-4xl md:text-5xl font-mono tracking-tight text-white font-bold">7+ Anos</p>
-              <p className="text-[10px] text-zinc-500 tracking-widest uppercase mt-2 font-mono">Na Tecnologia</p>
-            </div>
-            <div>
-              <p className="text-4xl md:text-5xl font-mono tracking-tight text-white font-bold">Full</p>
-              <p className="text-[10px] text-zinc-500 tracking-widest uppercase mt-2 font-mono">Stack Dev</p>
-            </div>
-            <div>
-              <p className="text-4xl md:text-5xl font-mono tracking-tight text-white font-bold">NTG</p>
-              <p className="text-[10px] text-zinc-500 tracking-widest uppercase mt-2 font-mono">Wrestling Elite</p>
-            </div>
-            <div>
-              <p className="text-4xl md:text-5xl font-mono tracking-tight text-white font-bold">FMU/IA</p>
-              <p className="text-[10px] text-zinc-500 tracking-widest uppercase mt-2 font-mono">Formação</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Interactive Image Component */}
-        <div className="lg:col-span-5 flex items-center justify-center w-full animate-fade-in delay-200">
-          <DualIdentityImage />
-        </div>
+        {/* Scroll Indicator */}
+        <motion.div
+          style={{ opacity: indicatorOpacity }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 select-none"
+        >
+          <span className="text-[9px] font-mono tracking-widest text-zinc-500 uppercase font-bold">
+            Role para ver
+          </span>
+          <div className="w-[1px] h-10 bg-gradient-to-b from-red-500 to-transparent animate-bounce"></div>
+        </motion.div>
       </div>
-    </section>
+    </div>
   );
 }

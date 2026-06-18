@@ -1,10 +1,10 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import KineticParallaxText from "@/components/KineticParallaxText";
 import About from "@/components/About";
 import HorizontalTimeline from "@/components/HorizontalTimeline";
 import TechStack from "@/components/TechStack";
 import Projects from "@/components/Projects";
+import KineticParallaxText from "@/components/KineticParallaxText";
 import WrestlingMindset from "@/components/WrestlingMindset";
 import Contact from "@/components/Contact";
 
@@ -12,14 +12,29 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 flex flex-col bg-black overflow-hidden">
+        {/* Starts with the fullscreen trophy hero section */}
         <Hero />
-        <KineticParallaxText />
+        
+        {/* Pinned/revealed bento board containing biography & metrics */}
         <About />
+        
+        {/* Chronological horizontal progress timeline */}
         <HorizontalTimeline />
+        
+        {/* Tech Stack containing skills & DevOps tools */}
         <TechStack />
+        
+        {/* Projects showcase and dynamic specs modal */}
         <Projects />
+        
+        {/* Kinetic marquee scroll divider */}
+        <KineticParallaxText />
+        
+        {/* Wrestling vs Code comparison */}
         <WrestlingMindset />
+        
+        {/* Footer contact details */}
         <Contact />
       </main>
     </>
