@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import DualIdentityImage from "./DualIdentityImage";
+import Image from "next/image";
 
 export default function About() {
   const revealVariants = {
@@ -50,7 +50,7 @@ export default function About() {
     <section id="sobre" className="py-32 md:py-48 border-t border-white/[0.05] bg-black relative">
       <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-20">
         
-        {/* Section Header (Lando message style) */}
+        {/* Section Header */}
         <motion.div
           variants={revealVariants}
           initial="hidden"
@@ -78,7 +78,7 @@ export default function About() {
           </p>
         </motion.div>
 
-        {/* 2-Column Split: Bio Narrative & Stats (Left) & Dual Image Mask (Right) */}
+        {/* 2-Column Split: Bio Narrative & Stats (Left) & Athlete Image (Right) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center mt-6">
           
           {/* Left Column */}
@@ -122,7 +122,7 @@ export default function About() {
             </motion.div>
           </div>
 
-          {/* Right Column: Dynamic Image */}
+          {/* Right Column: Static Athlete Stance Image Container */}
           <motion.div
             variants={revealVariants}
             initial="hidden"
@@ -130,7 +130,21 @@ export default function About() {
             viewport={{ once: true, margin: "-100px" }}
             className="lg:col-span-5 flex items-center justify-center w-full"
           >
-            <DualIdentityImage />
+            <div className="relative aspect-[3/4] w-full max-w-sm rounded-sm overflow-hidden border border-white/5 bg-zinc-950 shadow-2xl group select-none">
+              <Image
+                src="/kayqui_wrestler.png"
+                alt="Kayqui Rocha - Wrestling Stance"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 380px"
+                className="object-cover filter grayscale contrast-125 brightness-90 group-hover:scale-105 transition-transform duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+              {/* Badge */}
+              <div className="absolute bottom-5 right-5 bg-accent-lime/10 border border-accent-lime/20 text-accent-lime font-mono text-[9px] uppercase tracking-widest px-3 py-1 rounded-sm z-10 font-bold">
+                NTG Athlete
+              </div>
+            </div>
           </motion.div>
         </div>
 
