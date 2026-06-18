@@ -29,7 +29,7 @@ export default function About() {
     if (!container || lines.length === 0) return;
 
     const ctx = gsap.context(() => {
-      // Animate the line-by-line opacity reveal from 20% to 100%
+      // 1. Animate the line-by-line opacity reveal from 20% to 100%
       gsap.fromTo(
         lines,
         { opacity: 0.2, y: 10 },
@@ -47,6 +47,32 @@ export default function About() {
           },
         }
       );
+
+      // 2. Animate the handwriting signature path on scroll (Lando Norris style)
+      const signaturePath = document.getElementById("about-signature-path") as SVGPathElement | null;
+      if (signaturePath) {
+        const length = signaturePath.getTotalLength() || 1000;
+        
+        // Initial state set on DOM attributes
+        gsap.set(signaturePath, {
+          attr: {
+            "stroke-dasharray": length,
+            "stroke-dashoffset": length,
+          }
+        });
+
+        gsap.to(signaturePath, {
+          attr: { "stroke-dashoffset": 0 },
+          ease: "none",
+          scrollTrigger: {
+            trigger: signaturePath,
+            start: "top 85%", // Starts drawing when it approaches the viewport
+            end: "bottom 60%", // Finishes drawing before leaving
+            scrub: 1,
+            invalidateOnRefresh: true,
+          }
+        });
+      }
     }, containerRef);
 
     return () => ctx.revert();
@@ -107,6 +133,24 @@ export default function About() {
                 {line}
               </span>
             ))}
+
+            {/* SVG Signature container (drawn on scroll) */}
+            <div className="mt-8 flex justify-start select-none">
+              <svg
+                viewBox="0 0 400 120"
+                className="w-48 h-20 filter drop-shadow-[0_2px_8px_rgba(0,163,255,0.25)]"
+              >
+                <path
+                  id="about-signature-path"
+                  d="M 30 80 Q 55 20 65 20 T 75 90 Q 80 40 90 60 T 105 75 Q 115 45 120 60 T 130 80 Q 145 25 150 50 T 160 80 Q 170 50 175 75 T 185 75 Q 205 75 225 40 Q 235 20 245 25 T 250 80 Q 260 40 265 60 T 275 75 Q 285 40 290 60 T 300 75 T 315 65 Q 335 65 355 30 T 365 80"
+                  stroke="#00A3FF"
+                  strokeWidth="3.2"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
           </div>
         </div>
 

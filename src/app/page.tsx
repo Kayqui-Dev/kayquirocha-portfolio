@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Statement from "@/components/Statement";
+import About from "@/components/About";
 import ProjectGallery from "@/components/ProjectGallery";
 import TechStack from "@/components/TechStack";
 import WrestlingMindset from "@/components/WrestlingMindset";
@@ -22,7 +23,7 @@ export default function Home() {
 
     const ctx = gsap.context(() => {
       // 1. Transition to LIGHT mode when entering ProjectGallery
-      gsap.to(wrapper, {
+      gsap.to([wrapper, "#project-gallery"], {
         backgroundColor: "#E3E2DC", // Premium cream tone
         color: "#1C1C1C", // Dark text
         scrollTrigger: {
@@ -35,7 +36,7 @@ export default function Home() {
       });
 
       // 2. Transition back to DARK mode when leaving ProjectGallery into TechStack
-      gsap.to(wrapper, {
+      gsap.to([wrapper, "#project-gallery"], {
         backgroundColor: "#000000", // Back to deep dark
         color: "#f4f4f5", // Light text
         scrollTrigger: {
@@ -64,6 +65,9 @@ export default function Home() {
         
         {/* Giant typography statement (phrase) */}
         <Statement />
+        
+        {/* Seção 01 / Sobre Mim */}
+        <About />
         
         {/* Seção 01 / Galeria de Projetos */}
         <ProjectGallery />

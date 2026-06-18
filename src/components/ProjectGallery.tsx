@@ -455,7 +455,7 @@ export default function ProjectGallery() {
       <section
         id="project-gallery"
         ref={containerRef}
-        className="relative z-10 w-full h-screen bg-transparent flex flex-col justify-between py-16 overflow-hidden select-none border-t border-black/5"
+        className="relative z-10 w-full h-screen bg-[#000000] flex flex-col justify-between py-16 overflow-hidden select-none border-t border-black/5"
       >
         {/* Premium Topographic Contour Lines Background */}
         <BackgroundContours light={true} />
