@@ -8,7 +8,19 @@ import gsap from "gsap";
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const revealRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const offscreenCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const imgTrophyRef = useRef<HTMLImageElement | null>(null);
+  const trailRef = useRef<Array<{ x: number; y: number; r: number; opacity: number }>>([]);
+  const mouseRef = useRef({
+    x: 384,
+    y: 512,
+    targetX: 384,
+    targetY: 512,
+    isHovered: false,
+    radius: 0,
+    targetRadius: 0,
+  });
 
   // Track scroll progress of the hero section
   const { scrollYProgress } = useScroll({
@@ -27,63 +39,154 @@ export default function Hero() {
   const bgElementsOpacity = useTransform(scrollYProgress, [0, 0.5], [0.05, 0.15]);
   const marqueeOpacity = useTransform(scrollYProgress, [0, 0.5], [0.02, 0.05]);
 
+  // Load trophy image on mount
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = "/kayqui_trophy.jpg";
+    img.onload = () => {
+      imgTrophyRef.current = img;
+    };
+
+    // Create offscreen canvas once
+    offscreenCanvasRef.current = document.createElement("canvas");
+    offscreenCanvasRef.current.width = 768;
+    offscreenCanvasRef.current.height = 1024;
+  }, []);
+
   useEffect(() => {
     const card = cardRef.current;
-    const reveal = revealRef.current;
-    if (!card || !reveal) return;
+    const canvas = canvasRef.current;
+    if (!card || !canvas) return;
 
-    // Set initial mask state (hidden radius, centered)
-    gsap.set(reveal, {
-      "--mask-x": 200,
-      "--mask-y": 260,
-      "--mask-r": 0,
-    } as Record<string, number>);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    // GSAP quickTo setters for spring-like smooth cursor lag
-    const xSetter = gsap.quickTo(reveal, "--mask-x", {
-      duration: 0.15,
-      ease: "power2.out",
-    });
+    let lastX = 384;
+    let lastY = 512;
 
-    const ySetter = gsap.quickTo(reveal, "--mask-y", {
-      duration: 0.15,
-      ease: "power2.out",
-    });
+    const tick = () => {
+      const imgTrophy = imgTrophyRef.current;
+      const offscreen = offscreenCanvasRef.current;
+      const mouse = mouseRef.current;
+      const trail = trailRef.current;
+
+      // 1. Clear main canvas
+      ctx.clearRect(0, 0, 768, 1024);
+
+      // 2. Interpolate mouse coordinates and radius
+      mouse.radius += (mouse.targetRadius - mouse.radius) * 0.15;
+      mouse.x += (mouse.targetX - mouse.x) * 0.15;
+      mouse.y += (mouse.targetY - mouse.y) * 0.15;
+
+      // 3. Add points to trail if mouse is hovering
+      if (mouse.isHovered && mouse.radius > 5) {
+        const dist = Math.hypot(mouse.x - lastX, mouse.y - lastY);
+        if (dist > 3) {
+          const steps = Math.ceil(dist / 6); // Add a point every 6 canvas pixels
+          for (let i = 1; i <= steps; i++) {
+            const t = i / steps;
+            const x = lastX + (mouse.x - lastX) * t;
+            const y = lastY + (mouse.y - lastY) * t;
+            trail.push({
+              x,
+              y,
+              r: mouse.radius,
+              opacity: 1.0,
+            });
+          }
+          lastX = mouse.x;
+          lastY = mouse.y;
+        }
+      }
+
+      // 4. Update and age trail points (Snake trailing shrink)
+      for (let i = trail.length - 1; i >= 0; i--) {
+        const p = trail[i];
+        p.r -= 2.2;         // Taper brush size down
+        p.opacity -= 0.022; // Fade opacity
+        if (p.r <= 0 || p.opacity <= 0) {
+          trail.splice(i, 1);
+        }
+      }
+
+      // 5. Render trophy image masked by mouse trail to offscreen canvas
+      if (imgTrophy && offscreen && (mouse.radius > 0.1 || trail.length > 0)) {
+        const oCtx = offscreen.getContext("2d");
+        if (oCtx) {
+          // Clear offscreen
+          oCtx.clearRect(0, 0, 768, 1024);
+
+          // Save context state
+          oCtx.save();
+
+          // Draw all trailing brush circles
+          trail.forEach((p) => {
+            oCtx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+            oCtx.beginPath();
+            oCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            oCtx.fill();
+          });
+
+          // Draw current brush circle (head of the snake)
+          if (mouse.isHovered && mouse.radius > 0) {
+            oCtx.fillStyle = "rgba(255, 255, 255, 1)";
+            oCtx.beginPath();
+            oCtx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI * 2);
+            oCtx.fill();
+          }
+
+          // Composite the trophy image onto the mask
+          oCtx.globalCompositeOperation = "source-in";
+          oCtx.filter = "grayscale(100%) contrast(125%) brightness(100%)";
+          oCtx.drawImage(imgTrophy, 0, 0, 768, 1024);
+
+          // Restore state
+          oCtx.restore();
+
+          // Draw the composited offscreen canvas onto the main canvas
+          ctx.drawImage(offscreen, 0, 0, 768, 1024);
+        }
+      }
+    };
+
+    gsap.ticker.add(tick);
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const x = ((e.clientX - rect.left) / rect.width) * 768;
+      const y = ((e.clientY - rect.top) / rect.height) * 1024;
 
-      xSetter(x);
-      ySetter(y);
+      const mouse = mouseRef.current;
+      if (!mouse.isHovered) {
+        mouse.x = x;
+        mouse.y = y;
+        lastX = x;
+        lastY = y;
+      }
+      mouse.targetX = x;
+      mouse.targetY = y;
     };
 
     const handleMouseEnter = (e: MouseEvent) => {
       const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const x = ((e.clientX - rect.left) / rect.width) * 768;
+      const y = ((e.clientY - rect.top) / rect.height) * 1024;
 
-      gsap.set(reveal, {
-        "--mask-x": x,
-        "--mask-y": y,
-      } as Record<string, number>);
-
-      // Smoothly grow the reveal lens to a large premium size (150px)
-      gsap.to(reveal, {
-        "--mask-r": 150,
-        duration: 0.35,
-        ease: "power2.out",
-      });
+      const mouse = mouseRef.current;
+      mouse.isHovered = true;
+      mouse.x = x;
+      mouse.y = y;
+      mouse.targetX = x;
+      mouse.targetY = y;
+      lastX = x;
+      lastY = y;
+      mouse.targetRadius = 150; // Trophies brush size
     };
 
     const handleMouseLeave = () => {
-      // Smoothly shrink lens back to 0
-      gsap.to(reveal, {
-        "--mask-r": 0,
-        duration: 0.4,
-        ease: "power2.out",
-      });
+      const mouse = mouseRef.current;
+      mouse.isHovered = false;
+      mouse.targetRadius = 0;
     };
 
     card.addEventListener("mousemove", handleMouseMove);
@@ -91,6 +194,7 @@ export default function Hero() {
     card.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
+      gsap.ticker.remove(tick);
       card.removeEventListener("mousemove", handleMouseMove);
       card.removeEventListener("mouseenter", handleMouseEnter);
       card.removeEventListener("mouseleave", handleMouseLeave);
@@ -200,30 +304,17 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* 2. Revealed Image (Clipped dynamically): Trophy photo (kayqui_trophy.jpg) */}
-            <div
-              ref={revealRef}
-              className="absolute inset-0 z-10 w-full h-full pointer-events-none"
-              style={{
-                clipPath:
-                  "circle(calc(var(--mask-r, 0) * 1px) at calc(var(--mask-x, 200) * 1px) calc(var(--mask-y, 260) * 1px))",
-                WebkitClipPath:
-                  "circle(calc(var(--mask-r, 0) * 1px) at calc(var(--mask-x, 200) * 1px) calc(var(--mask-y, 260) * 1px))",
-              }}
-            >
-              <Image
-                src="/kayqui_trophy.jpg"
-                alt="Kayqui Rocha - Trophy"
-                fill
-                priority
-                sizes="(max-width: 768px) 80vw, 380px"
-                className="object-cover filter grayscale contrast-125 brightness-100"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
-              {/* Badge */}
-              <div className="absolute bottom-4 right-4 bg-accent-lime/10 border border-accent-lime/20 text-accent-lime font-mono text-[8px] uppercase tracking-widest px-2.5 py-0.5 rounded-sm z-20 font-bold">
-                Trophy / Athlete
-              </div>
+            {/* 2. Dynamic Canvas overlay for mouse trail reveal */}
+            <canvas
+              ref={canvasRef}
+              width="768"
+              height="1024"
+              className="absolute inset-0 w-full h-full pointer-events-none z-10"
+            />
+
+            {/* Badge for Trophy / Athlete (rendered on top of canvas) */}
+            <div className="absolute bottom-4 right-4 bg-accent-lime/10 border border-accent-lime/20 text-accent-lime font-mono text-[8px] uppercase tracking-widest px-2.5 py-0.5 rounded-sm z-20 font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              Trophy / Athlete
             </div>
 
             {/* Hover Instruction overlay */}
