@@ -1,9 +1,11 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import TechStack from "@/components/TechStack";
+import Trajetoria from "@/components/Trajetoria";
 import Projects from "@/components/Projects";
-import KineticParallaxText from "@/components/KineticParallaxText";
 import WrestlingMindset from "@/components/WrestlingMindset";
+import ProjetosAutorais from "@/components/ProjetosAutorais";
+import KineticParallaxText from "@/components/KineticParallaxText";
 import Contact from "@/components/Contact";
 
 export default function Home() {
@@ -16,15 +18,21 @@ export default function Home() {
         
         {/* Tech Stack containing skills & DevOps tools */}
         <TechStack />
+
+        {/* Vertical GSAP timeline trajectories */}
+        <Trajetoria />
         
-        {/* Projects showcase and dynamic specs modal */}
+        {/* Experience section (Market role and company history) */}
         <Projects />
+
+        {/* Wrestling vs Code comparison */}
+        <WrestlingMindset />
+
+        {/* Frosted glass wide projects cards (inspired by Hall of Fame) */}
+        <ProjetosAutorais />
         
         {/* Kinetic marquee scroll divider */}
         <KineticParallaxText />
-        
-        {/* Wrestling vs Code comparison */}
-        <WrestlingMindset />
         
         {/* Footer contact details */}
         <Contact />
