@@ -326,53 +326,97 @@ export default function ProjectGallery() {
     const tray = trayRef.current;
     if (!container || !tray) return;
 
-    const innerCards = gsap.utils.toArray("#project-gallery .project-card-inner") as HTMLDivElement[];
-    if (innerCards.length === 0) return;
+    let ctx: gsap.Context | null = null;
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: container,
-          start: "top top",
-          end: () => `+=${tray.scrollWidth - window.innerWidth}`,
-          scrub: 1, // Synced with Lenis
-          pin: true,
-          invalidateOnRefresh: true,
-        },
-      });
+    // Use a small timeout to ensure layout calculations are accurate
+    const timer = setTimeout(() => {
+      const innerCards = gsap.utils.toArray("#project-gallery .project-card-inner") as HTMLDivElement[];
+      if (innerCards.length === 0) return;
 
-      // Horizontal translation of the tray
-      tl.to(tray, {
-        x: () => -(tray.scrollWidth - window.innerWidth),
-        ease: "none",
-      });
+      ctx = gsap.context(() => {
+        const totalScroll = tray.scrollWidth - window.innerWidth;
 
-      // Staggered bottom-right fly-in and scale animation
-      tl.fromTo(
-        innerCards,
-        {
-          x: 500,
-          y: 400,
-          scale: 0.9,
-          rotation: 15,
-          opacity: 0,
-          transformOrigin: "bottom right",
-        },
-        {
-          x: 0,
-          y: 0,
-          scale: 1,
-          rotation: 0,
-          opacity: 1,
-          stagger: 0.06,
-          duration: 0.4,
-          ease: "power2.out" as const,
-        },
-        0.05
-      );
-    }, containerRef);
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: "top top",
+            end: () => `+=${totalScroll}`,
+            scrub: 1, // Synced with Lenis
+            pin: true,
+            invalidateOnRefresh: true,
+          },
+        });
 
-    return () => ctx.revert();
+        // Horizontal translation of the tray
+        tl.to(tray, {
+          x: -totalScroll,
+          ease: "none",
+          duration: 1,
+        });
+
+        // Dynamic staggered entrance based on viewport visibility
+        innerCards.forEach((card) => {
+          const parent = card.parentElement;
+          if (!parent) return;
+
+          const offsetLeft = parent.offsetLeft;
+          const startsOnScreen = offsetLeft < window.innerWidth;
+
+          if (startsOnScreen) {
+            // Smooth reveal for cards already in the initial viewport
+            tl.fromTo(
+              card,
+              {
+                scale: 0.97,
+                y: 8,
+                opacity: 0.9,
+              },
+              {
+                scale: 1,
+                y: 0,
+                opacity: 1,
+                duration: 0.15,
+                ease: "power2.out",
+              },
+              0
+            );
+          } else {
+            // Dynamic bottom-right fly-in reveal for cards entering later
+            const startScroll = offsetLeft - window.innerWidth;
+            const startProgress = totalScroll > 0 ? startScroll / totalScroll : 0;
+            const duration = 0.22; // Complete reveal over 22% of total scroll
+
+            tl.fromTo(
+              card,
+              {
+                x: 450,
+                y: 350,
+                scale: 0.9,
+                rotation: 12,
+                opacity: 0,
+                transformOrigin: "bottom right",
+              },
+              {
+                x: 0,
+                y: 0,
+                scale: 1,
+                rotation: 0,
+                opacity: 1,
+                duration: duration,
+                ease: "power2.out",
+              },
+              Math.max(0, startProgress - 0.04) // Start slightly before entering viewport
+            );
+          }
+        });
+      }, containerRef);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      if (ctx) ctx.revert();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
   }, []);
 
   return (
@@ -422,7 +466,7 @@ export default function ProjectGallery() {
                   {/* Browser Mockup Wrapper */}
                   <div
                     onClick={() => setSelectedProject(proj)}
-                    className={`${proj.imgHeight} relative flex flex-col w-full border border-black/10 rounded-md overflow-hidden bg-[#ECECE7] shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer group-hover/card:shadow-[0_12px_30px_rgba(0,0,0,0.08)] group-hover/card:border-black/20 group-hover/card:scale-[1.01] transition-all duration-500 ease-out`}
+                    className="relative w-full border border-black/10 rounded-md overflow-hidden bg-[#ECECE7] shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer group-hover/card:shadow-[0_12px_30px_rgba(0,0,0,0.08)] group-hover/card:border-black/20 group-hover/card:scale-[1.01] transition-all duration-500 ease-out"
                   >
                     {/* Browser Window Header */}
                     <div className="flex items-center justify-between px-3 py-1.5 border-b border-black/5 bg-[#E8E7E1] shrink-0 select-none">
@@ -445,13 +489,13 @@ export default function ProjectGallery() {
                     </div>
 
                     {/* Website Viewport */}
-                    <div className="relative flex-1 w-full overflow-hidden bg-[#CFCFCA]">
+                    <div className={`${proj.imgHeight} relative w-full overflow-hidden bg-[#CFCFCA]`}>
                       <Image
                         src={proj.image}
                         alt={proj.title}
                         fill
                         sizes="(max-width: 768px) 300px, 400px"
-                        className="object-cover object-top mix-blend-luminosity filter brightness-[0.92] contrast-[1.05] opacity-90 group-hover/card:mix-blend-normal group-hover/card:filter-none group-hover/card:opacity-100 transition-all duration-700 ease-out"
+                        className="object-cover object-top filter grayscale sepia-[0.15] contrast-[1.05] brightness-[0.92] group-hover/card:grayscale-0 group-hover/card:sepia-0 group-hover/card:brightness-100 group-hover/card:contrast-100 transition-all duration-700 ease-out"
                       />
                     </div>
                   </div>
