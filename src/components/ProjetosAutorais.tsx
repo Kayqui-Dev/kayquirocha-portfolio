@@ -102,27 +102,88 @@ const PROJECTS = [
 
 export default function ProjetosAutorais() {
   const [selectedProject, setSelectedProject] = useState<(typeof PROJECTS)[0] | null>(null);
+  const [scene, setScene] = useState("01 / 04");
   const containerRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const container = containerRef.current;
-    const track = trackRef.current;
-    if (!container || !track) return;
+    const cards = cardsRef.current.filter(Boolean);
+    if (!container || cards.length === 0) return;
 
     const ctx = gsap.context(() => {
-      gsap.to(track, {
-        x: () => -(track.scrollWidth - window.innerWidth),
-        ease: "none",
+      // Create pinned ScrollTrigger timeline
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
-          pin: true,
-          scrub: 1,
           start: "top top",
-          end: () => `+=${track.scrollWidth - window.innerWidth}`,
+          end: "+=3000", // Length of pinning scroll
+          scrub: 1,
+          pin: true,
           invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            // Determine active scene based on scroll progress
+            if (progress < 0.25) {
+              setScene("01 / 04");
+            } else if (progress < 0.5) {
+              setScene("02 / 04");
+            } else if (progress < 0.75) {
+              setScene("03 / 04");
+            } else {
+              setScene("04 / 04");
+            }
+          }
         },
       });
+
+      // Set initial states for subsequent stacked cards
+      for (let i = 1; i < cards.length; i++) {
+        gsap.set(cards[i], { yPercent: 100, opacity: 0 });
+      }
+
+      // Transition step 1: card 0 out, card 1 in
+      tl.to(cards[0], {
+        scale: 0.9,
+        opacity: 0,
+        duration: 1,
+        ease: "power1.inOut"
+      })
+      .to(cards[1], {
+        yPercent: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power1.inOut"
+      }, "<")
+
+      // Transition step 2: card 1 out, card 2 in
+      .to(cards[1], {
+        scale: 0.9,
+        opacity: 0,
+        duration: 1,
+        ease: "power1.inOut"
+      })
+      .to(cards[2], {
+        yPercent: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power1.inOut"
+      }, "<")
+
+      // Transition step 3: card 2 out, card 3 in
+      .to(cards[2], {
+        scale: 0.9,
+        opacity: 0,
+        duration: 1,
+        ease: "power1.inOut"
+      })
+      .to(cards[3], {
+        yPercent: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power1.inOut"
+      }, "<");
+
     }, containerRef);
 
     return () => ctx.revert();
@@ -133,72 +194,84 @@ export default function ProjetosAutorais() {
       <section
         id="projetos"
         ref={containerRef}
-        className="w-full h-screen overflow-hidden bg-black relative flex items-center"
+        className="w-full h-screen overflow-hidden bg-[#000000] relative flex items-center justify-center"
       >
-        {/* Fixed Title Header */}
-        <div className="absolute top-12 left-6 sm:left-12 md:left-24 z-20 flex flex-col gap-2 select-none pointer-events-none">
-          <span className="section-tag text-[10px] font-mono tracking-widest text-[#00A3FF] uppercase font-bold">
-            04 / Projetos Autorais
+        {/* Editorial Left Sidebar */}
+        <div className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 select-none pointer-events-none z-20 flex items-center gap-4">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#00A3FF] animate-pulse"></div>
+          <span
+            className="font-mono text-[9px] sm:text-xs tracking-widest text-[#00A3FF] uppercase font-bold"
+            style={{ writingMode: "vertical-rl" }}
+          >
+            ENGENHARIA DE SOLUÇÕES
           </span>
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tighter text-white uppercase font-sans">
-            PROJETOS AUTORAIS
-          </h2>
-          <div className="w-16 h-[2px] bg-[#00A3FF]"></div>
-          <p className="text-zinc-500 text-[10px] tracking-wider uppercase font-mono max-w-md mt-2 leading-relaxed hidden sm:block">
-            Mova o scroll para navegar horizontalmente. Clique no card para ver a arquitetura técnica detalhada e o fluxo de dados.
-          </p>
         </div>
 
-        {/* Pinned Horizontal Track */}
-        <div
-          ref={trackRef}
-          className="flex flex-nowrap h-full items-center pt-[20vh] pb-[5vh] px-[10vw] gap-[6vw]"
-          style={{ width: "max-content" }}
-        >
+        {/* Dynamic Scene Counter (Bottom Right) */}
+        <div className="absolute bottom-12 right-12 z-20 font-mono text-sm tracking-widest text-[#00A3FF] font-bold select-none">
+          {scene}
+        </div>
+
+        {/* Stack Container */}
+        <div className="relative w-[85vw] h-[75vh] max-w-6xl max-h-[660px] flex items-center justify-center z-10">
           {PROJECTS.map((proj, idx) => (
             <div
               key={proj.title}
+              ref={(el) => {
+                cardsRef.current[idx] = el;
+              }}
+              style={{ zIndex: (idx + 1) * 10 }}
               onClick={() => setSelectedProject(proj)}
-              className="relative w-[80vw] md:w-[75vw] xl:w-[70vw] h-[65vh] flex-shrink-0 rounded-2xl overflow-hidden bg-[rgba(10,12,16,0.35)] border border-white/5 hover:border-[#00A3FF]/20 hover:shadow-[0_20px_50px_rgba(0,163,255,0.12)] transition-all duration-500 cursor-pointer select-none group flex flex-col justify-end p-6 sm:p-12 md:p-16"
+              className="absolute inset-0 w-full h-full rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl flex flex-col md:flex-row justify-between p-6 sm:p-10 md:p-14 gap-8 shadow-2xl transition-all duration-300 hover:border-[#00A3FF]/20 cursor-pointer select-none group"
             >
-              {/* Background Image of the project */}
-              <div className="absolute inset-0 w-full h-full -z-10 bg-zinc-950">
+              {/* Left Column: Title & Metadata */}
+              <div className="flex-1 flex flex-col justify-between h-full relative z-10">
+                <div className="flex flex-col gap-2">
+                  {/* Category Tag */}
+                  <span className="font-mono text-[9px] sm:text-xs text-[#00A3FF] tracking-widest uppercase font-bold">
+                    0{idx + 1} / {proj.type}
+                  </span>
+                  
+                  {/* Title (Giant Serif Font) */}
+                  <h3 className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight uppercase leading-none group-hover:text-[#00A3FF] transition-colors duration-300">
+                    {proj.title}
+                  </h3>
+
+                  {/* Tech Stack List */}
+                  <div className="font-mono text-[8px] sm:text-[10px] text-zinc-500 tracking-wider uppercase font-medium mt-2">
+                    {proj.tags.join(" • ")}
+                  </div>
+                </div>
+
+                {/* Description and CTA button */}
+                <div className="flex flex-col gap-6 mt-4 md:mt-0">
+                  <p className="font-sans text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-md">
+                    {proj.desc}
+                  </p>
+
+                  <div className="flex items-center gap-3">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00A3FF] animate-pulse"></span>
+                    <span className="font-mono text-[9px] text-zinc-400 uppercase tracking-widest border border-white/10 group-hover:border-[#00A3FF]/30 px-3 py-1.5 rounded-md transition-all">
+                      Ver Arquitetura & Fluxo
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Visual Device / Graphic Interface */}
+              <div className="w-full md:w-[45%] h-[200px] md:h-full relative rounded-2xl overflow-hidden border border-white/5 bg-zinc-950 flex-shrink-0">
                 <Image
                   src={proj.image}
                   alt={proj.title}
                   fill
                   priority={idx === 0}
-                  sizes="(max-width: 1024px) 80vw, 70vw"
-                  className="object-cover filter brightness-[0.7] contrast-[1.05] group-hover:scale-[1.01] transition-transform duration-700 ease-out"
+                  sizes="(max-width: 768px) 100vw, 450px"
+                  className="object-cover filter brightness-[0.75] contrast-[1.05] group-hover:scale-102 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+                {/* Subtle gradient overlay to tie visual into the card */}
+                <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/80 via-black/10 to-transparent"></div>
               </div>
 
-              {/* Floating Glassmorphic Panel */}
-              <div className="relative max-w-lg p-6 sm:p-8 rounded-xl bg-black/45 backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col gap-4 z-10 transition-all duration-300 group-hover:border-[#00A3FF]/30">
-                {/* Tech Stack (Monospace small font with spacing) */}
-                <span className="font-mono text-[9px] sm:text-xs text-[#00A3FF] tracking-widest uppercase font-bold">
-                  {proj.tags.join(" • ")}
-                </span>
-
-                {/* Title (Giant Serif font) */}
-                <h3 className="font-serif text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight uppercase leading-none group-hover:text-[#00A3FF] transition-colors duration-300">
-                  {proj.title}
-                </h3>
-
-                {/* Description */}
-                <p className="font-sans text-[11px] sm:text-xs text-zinc-300 leading-relaxed">
-                  {proj.desc}
-                </p>
-
-                {/* Action Detail Row */}
-                <div className="flex items-center gap-2 pt-4 border-t border-white/10 mt-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A3FF] animate-pulse"></span>
-                  <span className="font-mono text-[9px] text-zinc-400 uppercase tracking-wider">
-                    Ver Especificação Técnica & Fluxo de Dados
-                  </span>
-                </div>
-              </div>
             </div>
           ))}
         </div>
