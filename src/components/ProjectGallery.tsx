@@ -310,13 +310,14 @@ export default function ProjectGallery() {
   const [selectedProject, setSelectedProject] = useState<ProjectDetails | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const trayRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const cards = cardsRef.current.filter(Boolean);
-    const tray = trayRef.current;
     const container = containerRef.current;
-    if (!container || !tray || cards.length === 0) return;
+    const tray = trayRef.current;
+    if (!container || !tray) return;
+
+    const cards = gsap.utils.toArray("#project-gallery .project-card") as HTMLDivElement[];
+    if (cards.length === 0) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -392,10 +393,7 @@ export default function ProjectGallery() {
             {GALLERY_PROJECTS.map((proj, idx) => (
               <div
                 key={idx}
-                ref={(el) => {
-                  cardsRef.current[idx] = el;
-                }}
-                className={`w-[260px] md:w-[320px] flex-shrink-0 flex flex-col gap-3 group select-none ${proj.offsetClass}`}
+                className={`project-card w-[260px] md:w-[320px] flex-shrink-0 flex flex-col gap-3 group select-none ${proj.offsetClass}`}
               >
                 {/* Metadata ABOVE the card */}
                 <div className="flex justify-between items-center w-full text-[10px] font-mono text-zinc-600 font-bold uppercase tracking-wider px-1">

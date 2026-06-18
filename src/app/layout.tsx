@@ -57,12 +57,12 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
     >
       <head>
         <meta name="color-scheme" content="dark" />
       </head>
-      <body className="min-h-full flex flex-col bg-[#000000] text-[#f4f4f5]">
+      <body className="min-h-screen flex flex-col bg-[#000000] text-[#f4f4f5]">
         <SmoothScroll />
         {children}
       </body>
