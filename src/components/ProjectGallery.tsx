@@ -412,13 +412,19 @@ export default function ProjectGallery() {
           }
         });
 
-        // Dynamic signature drawing animation (scrubbed on scroll near the end)
+        // Dynamic signature drawing animation (scrubbed on scroll near the end) using direct attributes
         const signaturePaths = gsap.utils.toArray("#project-gallery .signature-svg path") as SVGPathElement[];
         signaturePaths.forEach((path, idx) => {
-          const length = path.getTotalLength();
+          const fallbacks = [220, 350, 60];
+          const measuredLength = path.getTotalLength();
+          const length = measuredLength > 0 ? measuredLength : fallbacks[idx];
+
+          // Set SVG attributes directly on the DOM node to guarantee handwriting draw effect
           gsap.set(path, {
-            strokeDasharray: length,
-            strokeDashoffset: length,
+            attr: {
+              "stroke-dasharray": length,
+              "stroke-dashoffset": length,
+            }
           });
 
           const start = 0.82 + idx * 0.05;
@@ -427,7 +433,7 @@ export default function ProjectGallery() {
           tl.to(
             path,
             {
-              strokeDashoffset: 0,
+              attr: { "stroke-dashoffset": 0 },
               ease: "power1.inOut",
               duration: duration,
             },
