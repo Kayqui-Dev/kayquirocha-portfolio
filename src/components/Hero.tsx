@@ -200,8 +200,8 @@ export default function Hero() {
   });
 
   // Dynamic transforms based on scroll progress (Keeping background dark)
-  const cardScale = useTransform(scrollYProgress, [0, 0.5], [1.3, 0.9]);
-  const cardY = useTransform(scrollYProgress, [0, 0.5], [0, 50]);
+  const cardScale = useTransform(scrollYProgress, [0, 0.5], [1.0, 0.72]);
+  const cardY = useTransform(scrollYProgress, [0, 0.5], [0, 0]);
   const textScale = useTransform(scrollYProgress, [0, 0.5], [1.0, 0.85]);
   const textY = useTransform(scrollYProgress, [0, 0.5], [0, -40]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
@@ -450,7 +450,7 @@ export default function Hero() {
   return (
     <div
       ref={containerRef}
-      className="relative h-[180vh] w-full bg-black"
+      className="relative h-[260vh] w-full bg-black"
     >
       {/* Pinned Sticky Hero viewport with scrolling background color transition */}
       <motion.div
@@ -498,11 +498,11 @@ export default function Hero() {
           className="w-full flex justify-between items-start font-mono text-[9px] tracking-widest uppercase z-10 pt-10 pointer-events-none"
         >
           <div>
-            <span className="font-extrabold">KAYQUI ROCHA GODINHO</span>
+            <span className="font-extrabold block">KAYQUI ROCHA GODINHO</span>
             <motion.p style={{ color: textMutedColor }} className="mt-1">SÃO PAULO, BRASIL</motion.p>
           </div>
           <div className="text-right">
-            <span className="text-[#00A3FF] font-extrabold">FULL-STACK DEV / ATLETA NTG</span>
+            <span className="text-[#00A3FF] font-extrabold block">FULL-STACK DEV / ATLETA NTG</span>
             <motion.p style={{ color: textMutedColor }} className="mt-1">DESDE 2019</motion.p>
           </div>
         </motion.div>
@@ -540,7 +540,7 @@ export default function Hero() {
               y: cardY,
               borderColor: borderCol,
             }}
-            className="relative w-[80vw] sm:w-[380px] aspect-[3/4] overflow-hidden border rounded-sm bg-zinc-950 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)] cursor-crosshair select-none z-10 hover:border-[#00A3FF]/40 transition-colors duration-300"
+            className="relative w-[min(80vw,45vh)] sm:w-[min(380px,50vh)] aspect-[3/4] overflow-hidden border rounded-sm bg-zinc-950 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)] cursor-crosshair select-none z-10 hover:border-[#00A3FF]/40 transition-colors duration-300"
           >
             {/* 1. Base Image: Diner eating photo (kayqui_developer.jpg) */}
             <div className="absolute inset-0 w-full h-full z-0">
@@ -593,9 +593,9 @@ export default function Hero() {
             style={{ borderColor: accentColorTransform }}
             className="border-l-2 pl-4 flex flex-col pointer-events-none"
           >
-            <motion.span style={{ color: textMutedColor }} className="text-[9px] tracking-wider uppercase font-bold">Próximo Desafio</motion.span>
+            <motion.span style={{ color: textMutedColor }} className="text-[9px] tracking-wider uppercase font-bold block">Próximo Desafio</motion.span>
             <span className="text-xs font-bold uppercase mt-1">CPB Luta Livre / Kodava IA</span>
-            <span className="text-[#00A3FF] text-[10px] uppercase font-bold mt-0.5">SÃO PAULO — BRASIL</span>
+            <span className="text-[#00A3FF] text-[10px] uppercase font-bold mt-0.5 block">SÃO PAULO — BRASIL</span>
           </motion.div>
 
           {/* Action buttons with scroll-based borders */}
@@ -617,7 +617,7 @@ export default function Hero() {
 
           {/* Scroll reminder */}
           <div className="hidden md:flex items-center gap-4 select-none pointer-events-none">
-            <motion.span style={{ color: textMutedColor }} className="text-[9px] tracking-widest uppercase font-bold">Deslize para navegar</motion.span>
+            <motion.span style={{ color: textMutedColor }} className="text-[9px] tracking-widest uppercase font-bold block">Deslize para navegar</motion.span>
             <div className="w-8 h-[1px] bg-[#00A3FF]/50 relative overflow-hidden">
               <div className="absolute inset-0 bg-[#00A3FF] w-1/2 animate-[pulse_1.5s_infinite]"></div>
             </div>
