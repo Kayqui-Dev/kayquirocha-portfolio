@@ -29,7 +29,7 @@ const MILESTONES = [
     year: "2026",
     age: "18 Anos",
     title: "Alta Performance & NTG",
-    desc: "Engenheiro Full-Stack na VTP. Cursando ADS na FMU e sob intenso regime de treinamento no National Training Group (Wrestling).",
+    desc: "Engenheiro Full-Stack na VTP, Fundador da Kodava Solutions e Medalhista de Bronze (3º Lugar) no Campeonato Brasileiro JEB's Sub-18 de Wrestling (Série Ouro, -60kg). Cursando ADS na FMU.",
   },
 ];
 
@@ -72,7 +72,7 @@ export default function Trajetoria() {
         
         {/* Left Column: Title & Info */}
         <div className="lg:col-span-4 flex flex-col gap-4 select-none">
-          <span className="section-tag">01.2 / Trajetória</span>
+          <span className="section-tag">01.2 / Trajetória & Experiência</span>
           <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans">
             LINHA DO TEMPO
           </h2>

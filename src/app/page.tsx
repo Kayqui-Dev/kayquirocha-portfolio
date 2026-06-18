@@ -16,20 +16,20 @@ export default function Home() {
         {/* Starts with the fullscreen trophy hero section */}
         <Hero />
         
-        {/* Tech Stack containing skills & DevOps tools */}
-        <TechStack />
-
         {/* Vertical GSAP timeline trajectories */}
         <Trajetoria />
         
         {/* Experience section (Market role and company history) */}
         <Projects />
 
-        {/* Wrestling vs Code comparison */}
-        <WrestlingMindset />
+        {/* Tech Stack containing skills & DevOps tools */}
+        <TechStack />
 
         {/* Frosted glass wide projects cards (inspired by Hall of Fame) */}
         <ProjetosAutorais />
+
+        {/* Wrestling vs Code comparison */}
+        <WrestlingMindset />
         
         {/* Kinetic marquee scroll divider */}
         <KineticParallaxText />
