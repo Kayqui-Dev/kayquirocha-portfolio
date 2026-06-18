@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Statement from "@/components/Statement";
-import About from "@/components/About";
 import TechStack from "@/components/TechStack";
 import ProjetosAutorais from "@/components/ProjetosAutorais";
 import WrestlingMindset from "@/components/WrestlingMindset";
@@ -18,9 +17,6 @@ export default function Home() {
         {/* Giant typography statement (phrase) */}
         <Statement />
         
-        {/* Seção 01 / Sobre Mim */}
-        <About />
-
         {/* Seção 02 / Arsenal Tecnológico */}
         <TechStack />
 
