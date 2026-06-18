@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import Statement from "@/components/Statement";
 import About from "@/components/About";
 import ProjetosAutorais from "@/components/ProjetosAutorais";
+import WrestlingMindset from "@/components/WrestlingMindset";
 
 export default function Home() {
   return (
@@ -20,6 +21,9 @@ export default function Home() {
 
         {/* Seção 04 / Projetos Autorais */}
         <ProjetosAutorais />
+
+        {/* Seção 05 / Mindset de Atleta */}
+        <WrestlingMindset />
       </main>
     </>
   );

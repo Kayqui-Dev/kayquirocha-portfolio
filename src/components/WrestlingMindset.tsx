@@ -140,8 +140,11 @@ export default function WrestlingMindset() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-screen bg-[radial-gradient(circle_at_center,rgba(0,18,36,0.25)_0%,rgba(0,0,0,1)_85%)] overflow-hidden border-t border-white/[0.03] flex flex-col justify-between py-16 px-6 sm:px-12 md:px-24"
+      className="relative w-full h-screen overflow-hidden border-t border-white/[0.03] flex flex-col justify-between py-16 px-6 sm:px-12 md:px-24"
     >
+      {/* Split Backgrounds */}
+      <div className="absolute left-0 top-0 w-full lg:w-1/2 h-full bg-[#030303] border-r border-white/5 z-0 pointer-events-none"></div>
+      <div className="absolute right-0 top-0 hidden lg:block lg:w-1/2 h-full bg-[#000d1a] bg-[linear-gradient(rgba(0,163,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,163,255,0.015)_1px,transparent_1px)] bg-[size:30px_30px] z-0 pointer-events-none"></div>
       {/* Top Header Row */}
       <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 select-none z-20">
         <div className="flex flex-col gap-2">
