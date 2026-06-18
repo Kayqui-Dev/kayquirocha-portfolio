@@ -276,10 +276,8 @@ export default function Hero() {
           style={{ color: textColor }}
           className="w-full flex justify-between items-start font-mono text-[9px] tracking-widest uppercase z-10 pt-10 pointer-events-none"
         >
-          <div>
-            <span className="font-extrabold block">KAYQUI ROCHA GODINHO</span>
-            <motion.p style={{ color: textMutedColor }} className="mt-1">SÃO PAULO, BRASIL</motion.p>
-          </div>
+          {/* Removed left side to prevent overlap with fixed header logo */}
+          <div></div>
           <div className="text-right">
             <span className="text-[#00A3FF] font-extrabold block">FULL-STACK DEV / ATLETA NTG</span>
             <motion.p style={{ color: textMutedColor }} className="mt-1">DESDE 2019</motion.p>
@@ -353,7 +351,7 @@ export default function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
                 {/* Badge */}
                 <div className="absolute bottom-4 left-4 bg-black/80 border border-white/10 text-white font-mono text-[8px] uppercase tracking-widest px-2.5 py-0.5 rounded-sm z-20 font-bold">
-                  Dinner / Dev
+                  Fighter / Dev
                 </div>
               </div>
 
@@ -397,22 +395,8 @@ export default function Hero() {
             <span className="text-[#00A3FF] text-[10px] uppercase font-bold mt-0.5 block">SÃO PAULO — BRASIL</span>
           </motion.div>
 
-          {/* Action buttons with scroll-based borders */}
-          <div className="flex items-center gap-4 z-20">
-            <a
-              href="#stack"
-              className="inline-flex h-10 items-center justify-center rounded-sm bg-[#00A3FF] px-8 text-[10px] font-mono font-bold text-white uppercase hover:bg-white hover:text-black hover:border-white transition-all duration-300 shadow-md border border-[#00A3FF]"
-            >
-              Entrar
-            </a>
-            <motion.a
-              href="#contato"
-              style={{ borderColor: borderCol }}
-              className="inline-flex h-10 items-center justify-center rounded-sm border bg-black/60 px-8 text-[10px] font-mono text-zinc-400 uppercase hover:text-white hover:border-zinc-500 transition-all duration-300"
-            >
-              Contato
-            </motion.a>
-          </div>
+          {/* Buttons removed per request */}
+          <div></div>
 
           {/* Scroll reminder */}
           <div className="hidden md:flex items-center gap-4 select-none pointer-events-none">
