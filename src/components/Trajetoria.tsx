@@ -67,7 +67,7 @@ export default function Trajetoria() {
   }, []);
 
   return (
-    <section id="trajetoria" ref={containerRef} className="py-32 md:py-48 border-t border-white/[0.05] bg-black relative">
+    <section id="trajetoria" ref={containerRef} className="py-32 md:py-48 border-t border-white/[0.05] bg-transparent relative">
       <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         
         {/* Left Column: Title & Info */}

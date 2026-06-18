@@ -94,7 +94,7 @@ export default function WrestlingMindset() {
   const quoteWords = QUOTE_TEXT.split(" ");
 
   return (
-    <div ref={containerRef} className="relative w-full bg-black border-t border-white/[0.05]">
+    <div ref={containerRef} className="relative w-full bg-transparent border-t border-white/[0.05]">
       {/* Sticky Inner Viewport */}
       <div className="h-screen w-full flex flex-col justify-between py-20 px-6 sm:px-12 md:px-16 overflow-hidden">
         

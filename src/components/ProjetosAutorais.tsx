@@ -69,7 +69,7 @@ export default function ProjetosAutorais() {
 
   return (
     <>
-      <section id="projetos-autorais" className="py-32 md:py-48 border-t border-white/[0.05] bg-black relative">
+      <section id="projetos-autorais" className="py-32 md:py-48 border-t border-white/[0.05] bg-transparent relative">
         <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-16">
           
           {/* Section Header */}

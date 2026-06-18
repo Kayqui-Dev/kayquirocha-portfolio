@@ -33,7 +33,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="experiencia" className="py-32 md:py-48 border-t border-white/[0.05] bg-black">
+    <section id="experiencia" className="py-32 md:py-48 border-t border-white/[0.05] bg-transparent">
       <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-20">
         
         {/* Experience Section */}

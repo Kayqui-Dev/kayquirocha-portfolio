@@ -138,7 +138,7 @@ export default function TechStack() {
   }, []);
 
   return (
-    <section id="stack" ref={containerRef} className="py-32 md:py-48 border-t border-white/[0.05] bg-black">
+    <section id="stack" ref={containerRef} className="py-32 md:py-48 border-t border-white/[0.05] bg-transparent">
       <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-16">
         
         {/* Section Header */}
