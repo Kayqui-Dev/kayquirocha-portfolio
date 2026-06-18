@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="flex-1 flex flex-col bg-black overflow-x-clip relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+      <main className="flex-1 flex flex-col bg-black relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
         {/* Starts with the fullscreen trophy hero section */}
         <Hero />
         

@@ -395,7 +395,7 @@ export default function ProjectGallery() {
                 ref={(el) => {
                   cardsRef.current[idx] = el;
                 }}
-                className={`w-[260px] md:w-[320px] flex-shrink-0 flex flex-col gap-3 group select-none opacity-0 ${proj.offsetClass}`}
+                className={`w-[260px] md:w-[320px] flex-shrink-0 flex flex-col gap-3 group select-none ${proj.offsetClass}`}
               >
                 {/* Metadata ABOVE the card */}
                 <div className="flex justify-between items-center w-full text-[10px] font-mono text-zinc-600 font-bold uppercase tracking-wider px-1">
