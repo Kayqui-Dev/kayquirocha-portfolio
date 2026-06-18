@@ -411,6 +411,29 @@ export default function ProjectGallery() {
             );
           }
         });
+
+        // Dynamic signature drawing animation (scrubbed on scroll near the end)
+        const signaturePaths = gsap.utils.toArray("#project-gallery .signature-svg path") as SVGPathElement[];
+        signaturePaths.forEach((path, idx) => {
+          const length = path.getTotalLength();
+          gsap.set(path, {
+            strokeDasharray: length,
+            strokeDashoffset: length,
+          });
+
+          const start = 0.82 + idx * 0.05;
+          const duration = 0.08;
+
+          tl.to(
+            path,
+            {
+              strokeDashoffset: 0,
+              ease: "power1.inOut",
+              duration: duration,
+            },
+            start
+          );
+        });
       }, containerRef);
     }, 100);
 
@@ -514,7 +537,7 @@ export default function ProjectGallery() {
               <div className="text-[#1C1C1C] select-none">
                 <svg
                   viewBox="0 0 200 80"
-                  className="w-40 h-16 filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.06)]"
+                  className="signature-svg w-40 h-16 filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.06)]"
                   stroke="#1C1C1C"
                   strokeWidth="2.5"
                   fill="none"
