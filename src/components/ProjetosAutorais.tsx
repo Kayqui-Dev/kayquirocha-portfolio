@@ -111,20 +111,15 @@ export default function ProjetosAutorais() {
     if (!container || !track) return;
 
     const ctx = gsap.context(() => {
-      // Calculate scroll width dynamically
-      const scrollWidth = track.scrollWidth;
-      const windowWidth = window.innerWidth;
-      const totalScroll = scrollWidth - windowWidth;
-
       gsap.to(track, {
-        x: -totalScroll,
+        x: () => -(track.scrollWidth - window.innerWidth),
         ease: "none",
         scrollTrigger: {
           trigger: container,
           pin: true,
           scrub: 1,
           start: "top top",
-          end: () => `+=${totalScroll}`,
+          end: () => `+=${track.scrollWidth - window.innerWidth}`,
           invalidateOnRefresh: true,
         },
       });

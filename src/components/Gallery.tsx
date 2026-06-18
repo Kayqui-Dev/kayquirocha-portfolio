@@ -51,15 +51,11 @@ export default function Gallery() {
     if (!container || !tray) return;
 
     const ctx = gsap.context(() => {
-      const scrollWidth = tray.scrollWidth;
-      const windowWidth = window.innerWidth;
-      const totalScroll = scrollWidth - windowWidth;
-
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: "top top",
-          end: () => `+=${totalScroll}`,
+          end: () => `+=${tray.scrollWidth - window.innerWidth}`,
           scrub: 1, // Synced with Lenis.js
           pin: true,
           invalidateOnRefresh: true,
@@ -68,7 +64,7 @@ export default function Gallery() {
 
       // Horizontal translation of the collage tray
       tl.to(tray, {
-        x: -totalScroll,
+        x: () => -(tray.scrollWidth - window.innerWidth),
         ease: "none",
       });
 
