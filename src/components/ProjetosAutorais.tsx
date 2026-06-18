@@ -194,7 +194,7 @@ export default function ProjetosAutorais() {
       <section
         id="projetos"
         ref={containerRef}
-        className="w-full h-screen overflow-hidden bg-[#000000] relative flex items-center justify-center"
+        className="w-full h-screen overflow-hidden bg-[radial-gradient(circle_at_center,rgba(0,18,36,0.15)_0%,rgba(0,0,0,1)_85%)] relative flex items-center justify-center"
       >
         {/* Editorial Left Sidebar */}
         <div className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 select-none pointer-events-none z-20 flex items-center gap-4">
@@ -213,7 +213,7 @@ export default function ProjetosAutorais() {
         </div>
 
         {/* Stack Container */}
-        <div className="relative w-[85vw] h-[75vh] max-w-6xl max-h-[660px] flex items-center justify-center z-10">
+        <div className="relative w-[85vw] h-[75vh] max-w-6xl max-h-[700px] flex items-center justify-center z-10">
           {PROJECTS.map((proj, idx) => (
             <div
               key={proj.title}
@@ -222,7 +222,7 @@ export default function ProjetosAutorais() {
               }}
               style={{ zIndex: (idx + 1) * 10 }}
               onClick={() => setSelectedProject(proj)}
-              className="absolute inset-0 w-full h-full rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl flex flex-col md:flex-row justify-between p-6 sm:p-10 md:p-14 gap-8 shadow-2xl transition-all duration-300 hover:border-[#00A3FF]/20 cursor-pointer select-none group"
+              className="absolute inset-0 w-full h-full rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl flex flex-col md:flex-row justify-between p-8 sm:p-12 md:p-16 gap-8 shadow-2xl transition-all duration-300 hover:border-[#00A3FF]/20 cursor-pointer select-none group"
             >
               {/* Left Column: Title & Metadata */}
               <div className="flex-1 flex flex-col justify-between h-full relative z-10">
