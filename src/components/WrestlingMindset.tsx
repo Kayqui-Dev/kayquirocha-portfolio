@@ -165,7 +165,7 @@ export default function WrestlingMindset() {
       <div className="w-full flex justify-center my-4 z-10">
         <div ref={quoteRef} className="text-sm sm:text-base md:text-lg lg:text-xl font-serif text-zinc-400 italic max-w-4xl text-center leading-relaxed select-none">
           {quoteWords.map((word, i) => (
-            <span key={i} className="word inline-block mr-[0.25em] transition-opacity duration-300">
+            <span key={i} className="word inline-block mr-2 transition-opacity duration-300">
               {word}
             </span>
           ))}
