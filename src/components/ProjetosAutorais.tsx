@@ -54,41 +54,79 @@ const PROJECTS = [
     tags: ["React Native", "Python", "AI APIs", "FastAPI"],
     image: "/decide_ai_vida.png",
   },
+  {
+    title: "Centurion Fight Shop",
+    type: "E-commerce & Analytics",
+    year: "2025",
+    desc: "E-commerce completo e sistema interno para cadastro, indexação de lutas e gestão financeira de atletas associados.",
+    longDesc: "O Centurion Fight Shop é um ecossistema digital que combina uma experiência de venda de alta performance para produtos de luta com um painel administrativo integrado. Ele conecta a receita da loja ao suporte de atletas patrocinados, controlando comissões, vendas e dados de filiação de forma unificada.",
+    architecture: [
+      "Next.js no frontend para carregamento ultra-rápido e SEO.",
+      "Integração via Shopify Admin API e Storefront API.",
+      "Painel de controle administrativo customizado.",
+      "Webhooks do Shopify para sincronização em tempo real."
+    ],
+    features: [
+      "Carregamento instantâneo de produtos via Server-Side Rendering (SSR).",
+      "Checkout seguro integrado diretamente ao gateway de pagamentos.",
+      "Controle de repasse financeiro e comissões para atletas.",
+      "Gestão de estoque automatizada vinculada a múltiplos centros de distribuição."
+    ],
+    dbFlow: "Next.js Frontend -> Shopify Storefront API (Catálogo) & Node.js Backend (Comissões de Atletas) -> PostgreSQL. Os webhooks de venda concluída do Shopify batem na nossa API, que atualiza a carteira digital do atleta associado automaticamente.",
+    tags: ["Next.js", "Shopify API", "TypeScript", "Node.js", "Tailwind CSS"],
+    image: "/centurion_fight_shop.png",
+  },
+  {
+    title: "VTPDirect Dashboard",
+    type: "Painel Operacional & Logística",
+    year: "2024",
+    desc: "Painel administrativo criptografado para indexação de dados e análise operacional de frotas industriais.",
+    longDesc: "O VTPDirect Dashboard é um sistema de nível empresarial projetado para consolidar logs de operação, consumo e manutenção de frotas de transporte de larga escala. Ele traduz grandes volumes de dados de sensores industriais e GPS em insights gerenciais claros e tomadas de decisão rápidas.",
+    architecture: [
+      "Frontend administrativo otimizado.",
+      "API robusta em Express/Node.js.",
+      "Banco de dados relacional MySQL otimizado para leitura intensiva.",
+      "Criptografia de dados ponta a ponta (AES-256) para logs operacionais privados."
+    ],
+    features: [
+      "Rastreamento e status operacional de frotas em tempo real.",
+      "Geração automatizada de ordens de serviço e manutenção preditiva.",
+      "Gráficos interativos de performance de combustível e emissões.",
+      "Controle de acesso granular baseado em papéis (RBAC)."
+    ],
+    dbFlow: "Painel Administrativo -> Express.js API -> MySQL Database. Logs industriais e dados telemétricos são inseridos em lotes estruturados, indexados por data e ID de veículo, permitindo consultas analíticas rápidas de relatórios de consumo em menos de 100ms.",
+    tags: ["MySQL", "Node.js", "Express", "React", "Admin Panel"],
+    image: "/vtpdirect_dashboard.png",
+  }
 ];
 
 export default function ProjetosAutorais() {
   const [selectedProject, setSelectedProject] = useState<(typeof PROJECTS)[0] | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement[]>([]);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const cards = cardsRef.current.filter(Boolean);
-    if (cards.length === 0) return;
+    const container = containerRef.current;
+    const track = trackRef.current;
+    if (!container || !track) return;
 
     const ctx = gsap.context(() => {
-      cards.forEach((card) => {
-        gsap.fromTo(
-          card,
-          {
-            scale: 0.5,
-            opacity: 0,
-            x: 200,
-            y: 150,
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            x: 0,
-            y: 0,
-            ease: "none", // Keeps animation linear to scrolling position
-            scrollTrigger: {
-              trigger: card,
-              start: "top bottom",
-              end: "top center",
-              scrub: 1,
-            },
-          }
-        );
+      // Calculate scroll width dynamically
+      const scrollWidth = track.scrollWidth;
+      const windowWidth = window.innerWidth;
+      const totalScroll = scrollWidth - windowWidth;
+
+      gsap.to(track, {
+        x: -totalScroll,
+        ease: "none",
+        scrollTrigger: {
+          trigger: container,
+          pin: true,
+          scrub: 1,
+          start: "top top",
+          end: () => `+=${totalScroll}`,
+          invalidateOnRefresh: true,
+        },
       });
     }, containerRef);
 
@@ -98,78 +136,76 @@ export default function ProjetosAutorais() {
   return (
     <>
       <section
-        id="projetos-autorais"
+        id="projetos"
         ref={containerRef}
-        className="py-32 md:py-48 border-t border-white/[0.05] bg-[radial-gradient(circle_at_center,rgba(0,18,36,0.3)_0%,rgba(0,0,0,1)_85%)] relative overflow-hidden"
+        className="w-full h-screen overflow-hidden bg-black relative flex items-center"
       >
-        <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-16">
-          
-          {/* Section Header */}
-          <div className="flex flex-col gap-4 select-none">
-            <span className="section-tag">04 / Projetos Autorais</span>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans">
-              PROJETOS AUTORAIS
-            </h2>
-            <div className="w-16 h-[2px] bg-[#00A3FF]"></div>
-            <p className="text-zinc-500 text-xs max-w-xl leading-relaxed font-mono">
-              Modelos interativos inspirados no Hall of Fame. Toque ou clique no card para ver a arquitetura detalhada e fluxo de dados.
-            </p>
-          </div>
+        {/* Fixed Title Header */}
+        <div className="absolute top-12 left-6 sm:left-12 md:left-24 z-20 flex flex-col gap-2 select-none pointer-events-none">
+          <span className="section-tag text-[10px] font-mono tracking-widest text-[#00A3FF] uppercase font-bold">
+            04 / Projetos Autorais
+          </span>
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tighter text-white uppercase font-sans">
+            PROJETOS AUTORAIS
+          </h2>
+          <div className="w-16 h-[2px] bg-[#00A3FF]"></div>
+          <p className="text-zinc-500 text-[10px] tracking-wider uppercase font-mono max-w-md mt-2 leading-relaxed hidden sm:block">
+            Mova o scroll para navegar horizontalmente. Clique no card para ver a arquitetura técnica detalhada e o fluxo de dados.
+          </p>
+        </div>
 
-          {/* Cinematic Gallery - Spacious Cards Stack */}
-          <div className="flex flex-col gap-24 md:gap-32 w-full">
-            {PROJECTS.map((proj, idx) => (
-              <div
-                key={proj.title}
-                ref={(el) => {
-                  if (el) cardsRef.current[idx] = el;
-                }}
-                onClick={() => setSelectedProject(proj)}
-                style={{ opacity: 0 }} // Prevent Flash of Unstyled Content before GSAP kicks in
-                className="relative w-full rounded-2xl overflow-hidden bg-[rgba(10,12,16,0.35)] border border-white/5 hover:border-[#00A3FF]/20 hover:shadow-[0_20px_50px_rgba(0,163,255,0.12)] transition-all duration-500 cursor-pointer select-none group min-h-[480px] md:min-h-[580px] flex flex-col justify-end p-6 sm:p-10 md:p-14"
-              >
-                {/* Background Image of the project */}
-                <div className="absolute inset-0 w-full h-full -z-10 bg-black">
-                  <Image
-                    src={proj.image}
-                    alt={proj.title}
-                    fill
-                    priority={idx === 0}
-                    sizes="(max-width: 1024px) 100vw, 80vw"
-                    className="object-cover filter brightness-[0.7] contrast-[1.05] group-hover:scale-102 transition-transform duration-700 ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
-                </div>
+        {/* Pinned Horizontal Track */}
+        <div
+          ref={trackRef}
+          className="flex flex-nowrap h-full items-center pt-[20vh] pb-[5vh] px-[10vw] gap-[6vw]"
+          style={{ width: "max-content" }}
+        >
+          {PROJECTS.map((proj, idx) => (
+            <div
+              key={proj.title}
+              onClick={() => setSelectedProject(proj)}
+              className="relative w-[80vw] md:w-[75vw] xl:w-[70vw] h-[65vh] flex-shrink-0 rounded-2xl overflow-hidden bg-[rgba(10,12,16,0.35)] border border-white/5 hover:border-[#00A3FF]/20 hover:shadow-[0_20px_50px_rgba(0,163,255,0.12)] transition-all duration-500 cursor-pointer select-none group flex flex-col justify-end p-6 sm:p-12 md:p-16"
+            >
+              {/* Background Image of the project */}
+              <div className="absolute inset-0 w-full h-full -z-10 bg-zinc-950">
+                <Image
+                  src={proj.image}
+                  alt={proj.title}
+                  fill
+                  priority={idx === 0}
+                  sizes="(max-width: 1024px) 80vw, 70vw"
+                  className="object-cover filter brightness-[0.7] contrast-[1.05] group-hover:scale-[1.01] transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+              </div>
 
-                {/* Floating Glassmorphic Panel (CSS backdrop-filter: blur) */}
-                <div className="relative max-w-lg p-6 sm:p-8 rounded-xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col gap-4 z-10 transition-all duration-300 group-hover:border-[#00A3FF]/30">
-                  {/* Tech Stack (Monospace small font with spacing) */}
-                  <span className="font-mono text-[10px] sm:text-xs text-[#00A3FF] tracking-widest uppercase font-bold">
-                    {proj.tags.join(" • ")}
+              {/* Floating Glassmorphic Panel */}
+              <div className="relative max-w-lg p-6 sm:p-8 rounded-xl bg-black/45 backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col gap-4 z-10 transition-all duration-300 group-hover:border-[#00A3FF]/30">
+                {/* Tech Stack (Monospace small font with spacing) */}
+                <span className="font-mono text-[9px] sm:text-xs text-[#00A3FF] tracking-widest uppercase font-bold">
+                  {proj.tags.join(" • ")}
+                </span>
+
+                {/* Title (Giant Serif font) */}
+                <h3 className="font-serif text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight uppercase leading-none group-hover:text-[#00A3FF] transition-colors duration-300">
+                  {proj.title}
+                </h3>
+
+                {/* Description */}
+                <p className="font-sans text-[11px] sm:text-xs text-zinc-300 leading-relaxed">
+                  {proj.desc}
+                </p>
+
+                {/* Action Detail Row */}
+                <div className="flex items-center gap-2 pt-4 border-t border-white/10 mt-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A3FF] animate-pulse"></span>
+                  <span className="font-mono text-[9px] text-zinc-400 uppercase tracking-wider">
+                    Ver Especificação Técnica & Fluxo de Dados
                   </span>
-
-                  {/* Title (Giant Serif font) */}
-                  <h3 className="font-serif text-3xl sm:text-5xl font-bold text-white tracking-tight uppercase leading-none group-hover:text-[#00A3FF] transition-colors duration-300">
-                    {proj.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="font-sans text-xs sm:text-sm text-zinc-300 leading-relaxed">
-                    {proj.desc}
-                  </p>
-
-                  {/* Action Detail Row */}
-                  <div className="flex items-center gap-2 pt-4 border-t border-white/10 mt-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#00A3FF] animate-pulse"></span>
-                    <span className="font-mono text-[9px] text-zinc-400 uppercase tracking-wider">
-                      Ver Especificação Técnica & Fluxo de Dados
-                    </span>
-                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-
+            </div>
+          ))}
         </div>
       </section>
 
