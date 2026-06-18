@@ -2,6 +2,8 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Statement from "@/components/Statement";
 import ProjetosAutorais from "@/components/ProjetosAutorais";
+import About from "@/components/About";
+import WrestlingMindset from "@/components/WrestlingMindset";
 import Gallery from "@/components/Gallery";
 
 export default function Home() {
@@ -18,6 +20,12 @@ export default function Home() {
         {/* Cinematic Scroll-Triggered Reveal projects gallery */}
         <ProjetosAutorais />
         
+        {/* Seção 01 / Sobre Mim */}
+        <About />
+
+        {/* Seção 05 / Mindset de Atleta */}
+        <WrestlingMindset />
+
         {/* Cinematic horizontal gallery of moments */}
         <Gallery />
       </main>

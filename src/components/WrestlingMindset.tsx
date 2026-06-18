@@ -8,211 +8,195 @@ gsap.registerPlugin(ScrollTrigger);
 
 const TOPICS = [
   {
-    num: "01",
-    name: "Consistência Diária",
-    tatame: "A exaustão física sob pressão constante, onde o corpo implora para parar, mas a mente exige mais um round de esforço exaustivo.",
-    teclado: "Sistemas complexos nascem do commit persistente. A regularidade no teclado constrói arquiteturas escaláveis e robustas.",
-  },
-  {
     num: "02",
-    name: "Resiliência",
-    tatame: "Quedas duras e frustrações acumuladas no tatame de treinos. A resiliência é forjada na dor invisível de se levantar todas as vezes.",
-    teclado: "A busca obstinada por bugs que paralisam a execução. Cada erro de sistema é um oponente a ser vencido com frieza técnica.",
+    name: "Resiliência Sob Pressão",
+    tatame: "Manter a calma no tapete quando o oponente está em vantagem e usar técnica para reverter a luta.",
+    teclado: "Depurar erros complexos em produção ou lidar com picos de tráfego estruturando soluções friamente."
   },
   {
     num: "03",
-    name: "Estratégia",
-    tatame: "Decisões táticas em milissegundos sob extrema adrenalina: antecipar a ação do oponente e entrar na perna no momento exato.",
-    teclado: "Desenho arquitetural estratégico sob prazos curtos: planejar fluxos de dados, isolar serviços e garantir performance de pico.",
-  },
+    name: "Estratégia & Adaptação",
+    tatame: "Análise tática (scouting) do oponente para desenhar a estratégia perfeita de ataque e defesa.",
+    teclado: "Escolher a arquitetura ideal (Supabase, microsserviços, IA) para solucionar os gargalos de negócio com o menor custo."
+  }
 ];
-
-const QUOTE_TEXT = "No wrestling, não há atalhos. Cada vitória é conquistada com sangue, suor e repetição exaustiva.";
 
 export default function WrestlingMindset() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const leftTextsRef = useRef<HTMLDivElement[]>([]);
-  const rightTextsRef = useRef<HTMLDivElement[]>([]);
-  const topicTitlesRef = useRef<HTMLDivElement[]>([]);
-  const quoteRef = useRef<HTMLDivElement>(null);
+  const leftTextsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const rightTextsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const topicTitlesRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const quoteWords = quoteRef.current?.querySelectorAll(".word");
-    
-    const ctx = gsap.context(() => {
-      // 1. Word-by-word reveal animation for the Wrestling Quote (simulating SplitText)
-      if (quoteWords && quoteWords.length > 0) {
-        gsap.fromTo(
-          quoteWords,
-          { opacity: 0.1, y: 5 },
-          {
-            opacity: 1,
-            y: 0,
-            stagger: 0.05,
-            duration: 0.6,
-            ease: "none",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 70%",
-              end: "top 10%",
-              scrub: true,
-            },
-          }
-        );
-      }
+    const leftCards = leftTextsRef.current.filter(Boolean);
+    const rightCards = rightTextsRef.current.filter(Boolean);
+    const indicators = topicTitlesRef.current.filter(Boolean);
+    const container = containerRef.current;
+    if (!container) return;
 
-      // 2. Timeline for Pinning and cross-fading the topics
+    const ctx = gsap.context(() => {
+      // Create GSAP Timeline hooked to ScrollTrigger with Pin
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: containerRef.current,
+          trigger: container,
           start: "top top",
-          end: "+=2400", // Scroll length while pinned
-          scrub: true,
+          end: "+=1200", // Pinned scroll range
+          scrub: 1,
           pin: true,
           anticipatePin: 1,
         },
       });
 
-      // Staggered transitions between the three topics
-      // Fade out Topic 1, Fade in Topic 2
-      tl.to([leftTextsRef.current[0], rightTextsRef.current[0]], { opacity: 0, y: -20, duration: 1 })
-        .to(topicTitlesRef.current[0], { color: "rgba(255, 255, 255, 0.15)", scale: 0.95, duration: 0.5 }, "<")
-        .fromTo([leftTextsRef.current[1], rightTextsRef.current[1]], { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1 })
-        .to(topicTitlesRef.current[1], { color: "#00A3FF", scale: 1.1, duration: 0.5 }, "<")
-        
-      // Fade out Topic 2, Fade in Topic 3
-      tl.to([leftTextsRef.current[1], rightTextsRef.current[1]], { opacity: 0, y: -20, duration: 1 })
-        .to(topicTitlesRef.current[1], { color: "rgba(255, 255, 255, 0.15)", scale: 0.95, duration: 0.5 }, "<")
-        .fromTo([leftTextsRef.current[2], rightTextsRef.current[2]], { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1 })
-        .to(topicTitlesRef.current[2], { color: "#00A3FF", scale: 1.1, duration: 0.5 }, "<");
+      // Initially, Topic 03 is hidden below
+      gsap.set([leftCards[1], rightCards[1]], { opacity: 0, y: 50 });
+
+      // Timeline transitions:
+      // Fade out Topic 02 (moves up and fades)
+      tl.to([leftCards[0], rightCards[0]], {
+        opacity: 0,
+        y: -50,
+        duration: 1,
+        ease: "power2.inOut"
+      })
+      // Dim indicator 02
+      .to(indicators[0], {
+        color: "rgba(255, 255, 255, 0.15)",
+        scale: 0.9,
+        duration: 0.5
+      }, "<")
+      
+      // Fade in Topic 03 (moves up from bottom to active center)
+      .to([leftCards[1], rightCards[1]], {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power2.inOut"
+      }, "-=0.5")
+      // Highlight indicator 03
+      .to(indicators[1], {
+        color: "#00A3FF",
+        scale: 1.1,
+        duration: 0.5
+      }, "<");
 
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
-  const quoteWords = QUOTE_TEXT.split(" ");
-
   return (
-    <div ref={containerRef} className="relative w-full bg-transparent border-t border-white/[0.05]">
-      {/* Sticky Inner Viewport */}
-      <div className="h-screen w-full flex flex-col justify-between py-20 px-6 sm:px-12 md:px-16 overflow-hidden">
-        
-        {/* Section Header */}
-        <div className="w-full flex justify-between items-start select-none">
-          <div className="flex flex-col gap-2">
-            <span className="section-tag">05 / Mindset de Atleta</span>
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tighter text-white uppercase font-sans">
-              A DUALIDADE ON TRACK / OFF TRACK
-            </h2>
-            <div className="w-16 h-[2px] bg-[#00A3FF]"></div>
-          </div>
-          <span className="text-[10px] font-mono tracking-widest text-zinc-600 uppercase">
-            Tatame vs Teclado
+    <section
+      ref={containerRef}
+      className="relative w-full h-screen bg-[radial-gradient(circle_at_center,rgba(0,18,36,0.25)_0%,rgba(0,0,0,1)_85%)] overflow-hidden border-t border-white/[0.03] flex flex-col justify-between py-16 px-6 sm:px-12 md:px-24"
+    >
+      {/* Top Header Row */}
+      <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 select-none z-20">
+        <div className="flex flex-col gap-2">
+          <span className="section-tag text-[10px] font-mono tracking-widest text-[#00A3FF] uppercase font-bold">
+            05 / Mindset de Atleta
           </span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter text-white uppercase font-sans">
+            A Disciplina do Tatame na Engenharia.
+          </h2>
+          <div className="w-16 h-[2px] bg-[#00A3FF]"></div>
+          <p className="text-zinc-400 text-xs sm:text-sm font-sans max-w-2xl mt-2 leading-relaxed">
+            A Luta Livre Olímpica (Wrestling) não é apenas um esporte de força; é um xadrez humano de alavanca, estratégia e pura resiliência mental.
+          </p>
         </div>
+      </div>
 
-        {/* Floating Quote (revealed word-by-word on entry) */}
-        <div className="w-full flex justify-center my-6">
-          <div ref={quoteRef} className="text-xl sm:text-3xl font-serif text-zinc-400 italic max-w-3xl text-center leading-relaxed">
-            {quoteWords.map((word, i) => (
-              <span key={i} className="word inline-block mr-[0.25em] transition-opacity duration-300">
-                {word}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Split Screen Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-1 my-auto max-w-7xl mx-auto w-full relative">
+      {/* Split Screen Grid Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-1 my-auto max-w-7xl mx-auto w-full relative z-10 pt-8">
+        
+        {/* Left Side: No Tatame (Wrestling) */}
+        <div className="lg:col-span-5 flex flex-col justify-center items-center lg:items-end text-center lg:text-right p-4 border-b lg:border-b-0 lg:border-r border-white/5 h-full relative">
+          <span className="text-[10px] font-mono tracking-widest text-[#00A3FF] uppercase font-bold mb-1 block">
+            No Tatame
+          </span>
+          <h3 className="text-3xl sm:text-5xl font-serif text-white tracking-tighter uppercase font-bold leading-none mb-6">
+            Wrestling
+          </h3>
           
-          {/* Left Side: No Tatame (Wrestling) */}
-          <div className="lg:col-span-5 flex flex-col justify-center items-center lg:items-end text-center lg:text-right p-4 border-b lg:border-b-0 lg:border-r border-white/5 h-full relative">
-            <span className="text-[10px] font-mono tracking-widest text-[#00A3FF] uppercase font-bold mb-2 block">
-              NO TATAME
-            </span>
-            <h3 className="text-4xl sm:text-6xl font-serif text-white tracking-tighter uppercase font-bold leading-none mb-6">
-              WRESTLING
-            </h3>
-            
-            {/* Alternating Tatame Texts */}
-            <div className="relative w-full h-[120px] sm:h-[90px] flex items-center lg:justify-end">
-              {TOPICS.map((topic, idx) => (
-                <div
-                  key={idx}
-                  ref={(el) => {
-                    if (el) leftTextsRef.current[idx] = el;
-                  }}
-                  className={`absolute w-full flex flex-col justify-center lg:items-end transition-opacity duration-300 ${
-                    idx !== 0 ? "opacity-0" : "opacity-100"
-                  }`}
-                >
-                  <p className="text-xs sm:text-sm font-mono text-zinc-400 leading-relaxed max-w-md">
-                    {topic.tatame}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Center Column: Staggered Indicators */}
-          <div className="lg:col-span-2 flex flex-row lg:flex-col justify-center items-center gap-6 lg:gap-8 p-4 select-none">
+          {/* Container for absolute overlay cards */}
+          <div className="relative w-full h-[180px] sm:h-[130px] flex items-center lg:justify-end">
             {TOPICS.map((topic, idx) => (
               <div
                 key={idx}
                 ref={(el) => {
-                  if (el) topicTitlesRef.current[idx] = el;
+                  leftTextsRef.current[idx] = el;
                 }}
-                className={`flex flex-col items-center justify-center transition-all duration-500 font-serif ${
-                  idx === 0 ? "text-[#00A3FF] scale-110 font-bold" : "text-white/20 font-normal"
+                className={`absolute w-full flex flex-col justify-center lg:items-end transition-all duration-300 ${
+                  idx !== 0 ? "opacity-0 pointer-events-none" : "opacity-100"
                 }`}
               >
-                <span className="text-lg sm:text-xl font-mono leading-none">{topic.num}</span>
-                <span className="text-xs sm:text-sm tracking-wider uppercase whitespace-nowrap mt-1 leading-none">
-                  {topic.name}
-                </span>
+                <div className="backdrop-blur-xl bg-white/[0.02] border border-white/10 p-6 rounded-2xl shadow-xl w-full max-w-md transition-all hover:border-[#00A3FF]/25">
+                  <p className="text-xs sm:text-sm font-mono text-zinc-300 leading-relaxed">
+                    {topic.tatame}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
+        </div>
 
-          {/* Right Side: No Teclado (Código) */}
-          <div className="lg:col-span-5 flex flex-col justify-center items-center lg:items-start text-center lg:text-left p-4 h-full relative">
-            <span className="text-[10px] font-mono tracking-widest text-[#00A3FF] uppercase font-bold mb-2 block">
-              NO TECLADO
-            </span>
-            <h3 className="text-4xl sm:text-6xl font-serif text-white tracking-tighter uppercase font-bold leading-none mb-6">
-              CÓDIGO
-            </h3>
+        {/* Center Indicators */}
+        <div className="lg:col-span-2 flex flex-row lg:flex-col justify-center items-center gap-6 lg:gap-8 p-4 select-none z-10">
+          {TOPICS.map((topic, idx) => (
+            <div
+              key={idx}
+              ref={(el) => {
+                topicTitlesRef.current[idx] = el;
+              }}
+              className={`flex flex-col items-center justify-center transition-all duration-500 font-serif ${
+                idx === 0 ? "text-[#00A3FF] scale-110 font-bold" : "text-white/20 font-normal"
+              }`}
+            >
+              <span className="text-lg sm:text-xl font-mono leading-none">{topic.num}</span>
+              <span className="text-[10px] sm:text-xs tracking-wider uppercase whitespace-nowrap mt-1 leading-none">
+                {topic.name}
+              </span>
+            </div>
+          ))}
+        </div>
 
-            {/* Alternating Teclado Texts */}
-            <div className="relative w-full h-[120px] sm:h-[90px] flex items-center lg:justify-start">
-              {TOPICS.map((topic, idx) => (
-                <div
-                  key={idx}
-                  ref={(el) => {
-                    if (el) rightTextsRef.current[idx] = el;
-                  }}
-                  className={`absolute w-full flex flex-col justify-center lg:items-start transition-opacity duration-300 ${
-                    idx !== 0 ? "opacity-0" : "opacity-100"
-                  }`}
-                >
-                  <p className="text-xs sm:text-sm font-mono text-zinc-400 leading-relaxed max-w-md">
+        {/* Right Side: No Teclado (Código) */}
+        <div className="lg:col-span-5 flex flex-col justify-center items-center lg:items-start text-center lg:text-left p-4 h-full relative">
+          <span className="text-[10px] font-mono tracking-widest text-[#00A3FF] uppercase font-bold mb-1 block">
+            No Teclado
+          </span>
+          <h3 className="text-3xl sm:text-5xl font-serif text-white tracking-tighter uppercase font-bold leading-none mb-6">
+            Código
+          </h3>
+
+          {/* Container for absolute overlay cards */}
+          <div className="relative w-full h-[180px] sm:h-[130px] flex items-center lg:justify-start">
+            {TOPICS.map((topic, idx) => (
+              <div
+                key={idx}
+                ref={(el) => {
+                  rightTextsRef.current[idx] = el;
+                }}
+                className={`absolute w-full flex flex-col justify-center lg:items-start transition-all duration-300 ${
+                  idx !== 0 ? "opacity-0 pointer-events-none" : "opacity-100"
+                }`}
+              >
+                <div className="backdrop-blur-xl bg-white/[0.02] border border-white/10 p-6 rounded-2xl shadow-xl w-full max-w-md transition-all hover:border-[#00A3FF]/25">
+                  <p className="text-xs sm:text-sm font-mono text-zinc-300 leading-relaxed">
                     {topic.teclado}
                   </p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-
-        </div>
-
-        {/* Footer line details */}
-        <div className="w-full flex justify-between items-end select-none text-[8px] font-mono text-zinc-600 uppercase tracking-widest">
-          <span>Kodava Solutions</span>
-          <span>© 2026</span>
         </div>
 
       </div>
-    </div>
+
+      {/* Footer details */}
+      <div className="w-full flex justify-between items-end select-none text-[8px] font-mono text-zinc-600 uppercase tracking-widest z-20">
+        <span>Kodava Solutions</span>
+        <span>© 2026</span>
+      </div>
+    </section>
   );
 }
