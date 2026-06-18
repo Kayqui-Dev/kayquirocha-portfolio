@@ -347,21 +347,28 @@ export default function ProjectGallery() {
         ease: "none",
       });
 
-      // Staggered scale and subtle y-offset animation for inner cards (pre-revealed to avoid blank space)
+      // Staggered bottom-right fly-in and scale animation
       tl.fromTo(
         innerCards,
         {
-          scale: 0.96,
-          y: 10,
+          x: 500,
+          y: 400,
+          scale: 0.9,
+          rotation: 15,
+          opacity: 0,
+          transformOrigin: "bottom right",
         },
         {
-          scale: 1,
+          x: 0,
           y: 0,
-          stagger: 0.03,
-          duration: 1.0,
+          scale: 1,
+          rotation: 0,
+          opacity: 1,
+          stagger: 0.06,
+          duration: 0.4,
           ease: "power2.out" as const,
         },
-        0.1
+        0.05
       );
     }, containerRef);
 
@@ -403,25 +410,50 @@ export default function ProjectGallery() {
                 key={idx}
                 className={`project-card flex-shrink-0 flex flex-col justify-center select-none ${proj.cardClass}`}
               >
-                <div className="project-card-inner flex flex-col gap-2 w-full h-full">
+                <div className="project-card-inner group/card flex flex-col gap-2.5 w-full h-full">
                   {/* Metadata ABOVE the card (Title, Year) */}
-                  <div className="flex justify-between items-center w-full text-[9px] font-mono text-zinc-500 uppercase tracking-widest px-0.5">
-                    <span>{proj.title}</span>
-                    <span>{proj.year}</span>
+                  <div className="flex justify-between items-center w-full text-[10px] font-mono text-zinc-500 uppercase tracking-widest px-1">
+                    <span className="font-bold text-[#1C1C1C]/80 group-hover/card:text-[#00A3FF] transition-colors duration-300">
+                      {proj.title}
+                    </span>
+                    <span className="text-zinc-400">{proj.year}</span>
                   </div>
 
-                  {/* Card Image */}
+                  {/* Browser Mockup Wrapper */}
                   <div
                     onClick={() => setSelectedProject(proj)}
-                    className={`${proj.imgHeight} w-full relative overflow-hidden rounded-sm bg-[#D8D7D2] cursor-pointer`}
+                    className={`${proj.imgHeight} relative flex flex-col w-full border border-black/10 rounded-md overflow-hidden bg-[#ECECE7] shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer group-hover/card:shadow-[0_12px_30px_rgba(0,0,0,0.08)] group-hover/card:border-black/20 group-hover/card:scale-[1.01] transition-all duration-500 ease-out`}
                   >
-                    <Image
-                      src={proj.image}
-                      alt={proj.title}
-                      fill
-                      sizes="(max-width: 768px) 300px, 400px"
-                      className="object-cover filter grayscale contrast-[1.08] brightness-[0.88] hover:grayscale-0 hover:brightness-100 transition-all duration-700 ease-out"
-                    />
+                    {/* Browser Window Header */}
+                    <div className="flex items-center justify-between px-3 py-1.5 border-b border-black/5 bg-[#E8E7E1] shrink-0 select-none">
+                      {/* Window Controls (Mac style colored dots) */}
+                      <div className="flex items-center gap-1.5 w-12">
+                        <div className="w-2 h-2 rounded-full bg-[#FF5F56]/30 group-hover/card:bg-[#FF5F56] transition-colors duration-300"></div>
+                        <div className="w-2 h-2 rounded-full bg-[#FFBD2E]/30 group-hover/card:bg-[#FFBD2E] transition-colors duration-300"></div>
+                        <div className="w-2 h-2 rounded-full bg-[#27C93F]/30 group-hover/card:bg-[#27C93F] transition-colors duration-300"></div>
+                      </div>
+                      
+                      {/* Address Bar URL */}
+                      <div className="flex-1 max-w-[65%] bg-black/[0.04] group-hover/card:bg-black/[0.06] rounded py-0.5 px-3 text-[9px] font-mono text-center truncate text-zinc-500 group-hover/card:text-[#1C1C1C] transition-colors duration-300">
+                        {proj.link.replace("https://", "").replace("www.", "")}
+                      </div>
+
+                      {/* External Link Icon */}
+                      <div className="w-12 flex justify-end">
+                        <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400 group-hover/card:text-[#00A3FF] transition-colors duration-300" />
+                      </div>
+                    </div>
+
+                    {/* Website Viewport */}
+                    <div className="relative flex-1 w-full overflow-hidden bg-[#CFCFCA]">
+                      <Image
+                        src={proj.image}
+                        alt={proj.title}
+                        fill
+                        sizes="(max-width: 768px) 300px, 400px"
+                        className="object-cover object-top mix-blend-luminosity filter brightness-[0.92] contrast-[1.05] opacity-90 group-hover/card:mix-blend-normal group-hover/card:filter-none group-hover/card:opacity-100 transition-all duration-700 ease-out"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
