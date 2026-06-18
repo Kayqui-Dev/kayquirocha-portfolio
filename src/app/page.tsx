@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import Statement from "@/components/Statement";
 import ProjetosAutorais from "@/components/ProjetosAutorais";
 import Gallery from "@/components/Gallery";
 
@@ -11,10 +12,13 @@ export default function Home() {
         {/* Starts with the fullscreen trophy hero section */}
         <Hero />
         
+        {/* Giant typography statement (phrase) */}
+        <Statement />
+        
         {/* Cinematic Scroll-Triggered Reveal projects gallery */}
         <ProjetosAutorais />
         
-        {/* Cinematic horizontal gallery */}
+        {/* Cinematic horizontal gallery of moments */}
         <Gallery />
       </main>
     </>
