@@ -334,22 +334,23 @@ export default function ProjectGallery() {
       if (innerCards.length === 0) return;
 
       ctx = gsap.context(() => {
-        const totalScroll = tray.scrollWidth - window.innerWidth;
+        // Dynamic scroll width calculation function
+        const getScrollAmount = () => tray.scrollWidth - window.innerWidth;
 
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: container,
             start: "top top",
-            end: () => `+=${totalScroll}`,
+            end: () => `+=${getScrollAmount()}`,
             scrub: 1, // Synced with Lenis
             pin: true,
             invalidateOnRefresh: true,
           },
         });
 
-        // Horizontal translation of the tray
+        // Horizontal translation of the tray using dynamic function
         tl.to(tray, {
-          x: -totalScroll,
+          x: () => -getScrollAmount(),
           ease: "none",
           duration: 1,
         });
@@ -383,7 +384,8 @@ export default function ProjectGallery() {
           } else {
             // Dynamic bottom-right fly-in reveal for cards entering later
             const startScroll = offsetLeft - window.innerWidth;
-            const startProgress = totalScroll > 0 ? startScroll / totalScroll : 0;
+            const scrollAmount = getScrollAmount();
+            const startProgress = scrollAmount > 0 ? startScroll / scrollAmount : 0;
             const duration = 0.22; // Complete reveal over 22% of total scroll
 
             tl.fromTo(
@@ -424,7 +426,7 @@ export default function ProjectGallery() {
       <section
         id="project-gallery"
         ref={containerRef}
-        className="relative w-full h-screen bg-[#E3E2DC] flex flex-col justify-between py-16 overflow-hidden select-none border-t border-black/5"
+        className="relative z-10 w-full h-screen bg-[#E3E2DC] flex flex-col justify-between py-16 overflow-hidden select-none border-t border-black/5"
       >
         {/* Premium Topographic Contour Lines Background */}
         <BackgroundContours light={true} />
