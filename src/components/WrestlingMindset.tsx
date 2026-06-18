@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const TOPICS = [
+  {
+    num: "01",
+    name: "Consistência Diária",
+    tatame: "A exaustão física sob pressão constante, onde o corpo implora para parar, mas a mente exige mais um round de esforço exaustivo.",
+    teclado: "Sistemas complexos nascem do commit persistente. A regularidade no teclado constrói arquiteturas escaláveis e robustas."
+  },
   {
     num: "02",
     name: "Resiliência Sob Pressão",
@@ -21,26 +27,51 @@ const TOPICS = [
   }
 ];
 
+const QUOTE_TEXT = "No wrestling, não há atalhos. Cada vitória é conquistada com sangue, suor e repetição exaustiva. No código, o princípio é o mesmo.";
+
 export default function WrestlingMindset() {
   const containerRef = useRef<HTMLDivElement>(null);
   const leftTextsRef = useRef<(HTMLDivElement | null)[]>([]);
   const rightTextsRef = useRef<(HTMLDivElement | null)[]>([]);
   const topicTitlesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const quoteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const leftCards = leftTextsRef.current.filter(Boolean);
     const rightCards = rightTextsRef.current.filter(Boolean);
     const indicators = topicTitlesRef.current.filter(Boolean);
+    const quoteWords = quoteRef.current?.querySelectorAll(".word");
     const container = containerRef.current;
     if (!container) return;
 
     const ctx = gsap.context(() => {
-      // Create GSAP Timeline hooked to ScrollTrigger with Pin
+      // 1. Word-by-word reveal animation for the Wrestling Quote on enter
+      if (quoteWords && quoteWords.length > 0) {
+        gsap.fromTo(
+          quoteWords,
+          { opacity: 0.1, y: 5 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.03,
+            duration: 0.5,
+            ease: "none",
+            scrollTrigger: {
+              trigger: container,
+              start: "top 80%",
+              end: "top 30%",
+              scrub: true,
+            },
+          }
+        );
+      }
+
+      // 2. Create GSAP Timeline hooked to ScrollTrigger with Pin
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: "top top",
-          end: "+=1200", // Pinned scroll range
+          end: "+=2200", // Expanded scroll range for 3 slides
           scrub: 1,
           pin: true,
           anticipatePin: 1,
@@ -48,33 +79,52 @@ export default function WrestlingMindset() {
         },
       });
 
-      // Initially, Topic 03 is hidden below
-      gsap.set([leftCards[1], rightCards[1]], { opacity: 0, y: 50 });
+      // Set initial states for slide 02 and 03
+      gsap.set([leftCards[1], rightCards[1], leftCards[2], rightCards[2]], { opacity: 0, y: 50 });
 
-      // Timeline transitions:
-      // Fade out Topic 02 (moves up and fades)
+      // Transition 1: Slide 01 out, Slide 02 in
       tl.to([leftCards[0], rightCards[0]], {
         opacity: 0,
         y: -50,
         duration: 1,
         ease: "power2.inOut"
       })
-      // Dim indicator 02
       .to(indicators[0], {
         color: "rgba(255, 255, 255, 0.15)",
         scale: 0.9,
         duration: 0.5
       }, "<")
-      
-      // Fade in Topic 03 (moves up from bottom to active center)
       .to([leftCards[1], rightCards[1]], {
         opacity: 1,
         y: 0,
         duration: 1,
         ease: "power2.inOut"
       }, "-=0.5")
-      // Highlight indicator 03
       .to(indicators[1], {
+        color: "#00A3FF",
+        scale: 1.1,
+        duration: 0.5
+      }, "<")
+
+      // Transition 2: Slide 02 out, Slide 03 in
+      .to([leftCards[1], rightCards[1]], {
+        opacity: 0,
+        y: -50,
+        duration: 1,
+        ease: "power2.inOut"
+      })
+      .to(indicators[1], {
+        color: "rgba(255, 255, 255, 0.15)",
+        scale: 0.9,
+        duration: 0.5
+      }, "<")
+      .to([leftCards[2], rightCards[2]], {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power2.inOut"
+      }, "-=0.5")
+      .to(indicators[2], {
         color: "#00A3FF",
         scale: 1.1,
         duration: 0.5
@@ -84,6 +134,8 @@ export default function WrestlingMindset() {
 
     return () => ctx.revert();
   }, []);
+
+  const quoteWords = QUOTE_TEXT.split(" ");
 
   return (
     <section
@@ -106,8 +158,19 @@ export default function WrestlingMindset() {
         </div>
       </div>
 
+      {/* Intro Quote (Reveals Word-by-Word) */}
+      <div className="w-full flex justify-center my-4 z-10">
+        <div ref={quoteRef} className="text-sm sm:text-base md:text-lg lg:text-xl font-serif text-zinc-400 italic max-w-4xl text-center leading-relaxed select-none">
+          {quoteWords.map((word, i) => (
+            <span key={i} className="word inline-block mr-[0.25em] transition-opacity duration-300">
+              {word}
+            </span>
+          ))}
+        </div>
+      </div>
+
       {/* Split Screen Grid Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-1 my-auto max-w-7xl mx-auto w-full relative z-10 pt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-1 my-auto max-w-7xl mx-auto w-full relative z-10 pt-4">
         
         {/* Left Side: No Tatame (Wrestling) */}
         <div className="lg:col-span-5 flex flex-col justify-center items-center lg:items-end text-center lg:text-right p-4 border-b lg:border-b-0 lg:border-r border-white/5 h-full relative">
