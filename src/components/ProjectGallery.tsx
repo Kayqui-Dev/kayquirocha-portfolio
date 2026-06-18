@@ -32,7 +32,8 @@ interface ProjectDetails {
   tags: string[];
   image: string;
   link: string;
-  offsetClass: string;
+  cardClass: string;
+  imgHeight: string;
 }
 
 const GALLERY_PROJECTS: ProjectDetails[] = [
@@ -58,7 +59,8 @@ const GALLERY_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "supabase", "python", "tailwind"],
     image: "/centurion_scout.png",
     link: "https://www.centurionfight.shop/",
-    offsetClass: "-translate-y-12"
+    cardClass: "w-[240px] md:w-[300px] -translate-y-20 rotate-[-1.5deg]",
+    imgHeight: "h-[240px] md:h-[300px]"
   },
   {
     title: "Kodava Barber SaaS",
@@ -81,7 +83,8 @@ const GALLERY_PROJECTS: ProjectDetails[] = [
     tags: ["typescript", "react", "nodejs"],
     image: "/store_acai.png",
     link: "https://v0-kodava-crm.vercel.app/",
-    offsetClass: "translate-y-12"
+    cardClass: "w-[280px] md:w-[340px] translate-y-16 rotate-[1.5deg]",
+    imgHeight: "h-[360px] md:h-[420px]"
   },
   {
     title: "Decide Aí Vida",
@@ -104,7 +107,8 @@ const GALLERY_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "openai", "tailwind"],
     image: "/decide_ai_vida.png",
     link: "https://v0-kodava-crm.vercel.app/",
-    offsetClass: "-translate-y-8"
+    cardClass: "w-[300px] md:w-[360px] -translate-y-10 rotate-[2deg]",
+    imgHeight: "h-[300px] md:h-[360px]"
   },
   {
     title: "VTP Systems",
@@ -127,7 +131,8 @@ const GALLERY_PROJECTS: ProjectDetails[] = [
     tags: ["javascript", "php", "mysql"],
     image: "/vtpsystem_scraped.png",
     link: "https://vtpsystem.com.br/login.php",
-    offsetClass: "translate-y-8"
+    cardClass: "w-[260px] md:w-[320px] translate-y-20 rotate-[-2deg]",
+    imgHeight: "h-[220px] md:h-[280px]"
   },
   {
     title: "Emporio Glass",
@@ -150,7 +155,8 @@ const GALLERY_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "typescript", "nodejs", "mysql"],
     image: "/emporioglass_scraped.png",
     link: "https://emporioglass.com/",
-    offsetClass: "-translate-y-12"
+    cardClass: "w-[340px] md:w-[400px] -translate-y-4 rotate-[0.5deg]",
+    imgHeight: "h-[450px] md:h-[510px]"
   },
   {
     title: "Love Kodava Shop",
@@ -173,7 +179,8 @@ const GALLERY_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "supabase", "tailwind"],
     image: "/lovekodavashop_scraped.png",
     link: "https://www.love-kodava.shop/",
-    offsetClass: "translate-y-12"
+    cardClass: "w-[300px] md:w-[360px] translate-y-14 rotate-[-1.5deg]",
+    imgHeight: "h-[300px] md:h-[360px]"
   },
   {
     title: "Centurion Fight Shop",
@@ -196,7 +203,8 @@ const GALLERY_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "nodejs", "shopify"],
     image: "/centurionfight_scraped.png",
     link: "https://www.centurionfight.shop/",
-    offsetClass: "-translate-y-8"
+    cardClass: "w-[250px] md:w-[310px] -translate-y-16 rotate-[2.5deg]",
+    imgHeight: "h-[330px] md:h-[390px]"
   },
   {
     title: "Kodava CRM",
@@ -219,7 +227,8 @@ const GALLERY_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "supabase", "openai"],
     image: "/kodavacrm_scraped.png",
     link: "https://v0-kodava-crm.vercel.app/",
-    offsetClass: "translate-y-8"
+    cardClass: "w-[360px] md:w-[420px] translate-y-8 rotate-[-1deg]",
+    imgHeight: "h-[270px] md:h-[330px]"
   },
   {
     title: "Esporte NTG",
@@ -242,7 +251,8 @@ const GALLERY_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "tailwind", "postgresql"],
     image: "/esportentg.png",
     link: "https://esportentg.com.br/",
-    offsetClass: "-translate-y-12"
+    cardClass: "w-[330px] md:w-[390px] -translate-y-12 rotate-[1.5deg]",
+    imgHeight: "h-[440px] md:h-[500px]"
   }
 ];
 
@@ -316,8 +326,8 @@ export default function ProjectGallery() {
     const tray = trayRef.current;
     if (!container || !tray) return;
 
-    const cards = gsap.utils.toArray("#project-gallery .project-card") as HTMLDivElement[];
-    if (cards.length === 0) return;
+    const innerCards = gsap.utils.toArray("#project-gallery .project-card-inner") as HTMLDivElement[];
+    if (innerCards.length === 0) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -337,9 +347,9 @@ export default function ProjectGallery() {
         ease: "none",
       });
 
-      // Staggered scale and subtle y-offset animation for cards (pre-revealed to avoid blank space)
+      // Staggered scale and subtle y-offset animation for inner cards (pre-revealed to avoid blank space)
       tl.fromTo(
-        cards,
+        innerCards,
         {
           scale: 0.96,
           y: 10,
@@ -391,53 +401,27 @@ export default function ProjectGallery() {
             {GALLERY_PROJECTS.map((proj, idx) => (
               <div
                 key={idx}
-                className={`project-card w-[260px] md:w-[320px] flex-shrink-0 flex flex-col gap-3 group select-none ${proj.offsetClass}`}
+                className={`project-card flex-shrink-0 flex flex-col justify-center select-none ${proj.cardClass}`}
               >
-                {/* Metadata ABOVE the card */}
-                <div className="flex justify-between items-center w-full text-[10px] font-mono text-zinc-600 font-bold uppercase tracking-wider px-1">
-                  <span className="text-[#00A3FF]">{proj.status}</span>
-                  <span className="px-1.5 py-0.5 rounded-sm bg-black/5 border border-black/5 text-[9px] text-zinc-500">
-                    {proj.year}
-                  </span>
-                </div>
+                <div className="project-card-inner flex flex-col gap-2 w-full h-full">
+                  {/* Metadata ABOVE the card (Title, Year) */}
+                  <div className="flex justify-between items-center w-full text-[9px] font-mono text-zinc-500 uppercase tracking-widest px-0.5">
+                    <span>{proj.title}</span>
+                    <span>{proj.year}</span>
+                  </div>
 
-                {/* Card Image */}
-                <div
-                  onClick={() => setSelectedProject(proj)}
-                  className="w-full h-[320px] md:h-[400px] relative rounded-2xl overflow-hidden border border-black/8 bg-[#CFCFCA] shadow-[0_15px_35px_rgba(0,0,0,0.06)] cursor-pointer group-hover:border-[#00A3FF]/40 transition-all duration-500 group-hover:shadow-[0_20px_50px_rgba(0,163,255,0.08)]"
-                >
-                  <Image
-                    src={proj.image}
-                    alt={proj.title}
-                    fill
-                    sizes="(max-width: 768px) 260px, 320px"
-                    className="object-cover filter brightness-[0.9] contrast-[1.02] group-hover:scale-102 transition-all duration-700 ease-out"
-                  />
-                </div>
-
-                {/* Title and Footer BELOW the card */}
-                <div className="flex flex-col gap-2 px-1">
-                  <h4 className="text-xl md:text-2xl font-serif text-[#1C1C1C] uppercase font-bold leading-tight group-hover:text-[#00A3FF] transition-colors duration-300">
-                    {proj.title}
-                  </h4>
-                  
-                  {/* Hover Icons & Links */}
-                  <div className="flex justify-between items-center mt-1">
-                    <div className="flex gap-2">
-                      {proj.tags.map((tag) => (
-                        <TechIcon key={tag} name={tag} />
-                      ))}
-                    </div>
-                    
-                    <a
-                      href={proj.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="w-6 h-6 rounded-full border border-zinc-300 hover:border-[#00A3FF] hover:bg-[#00A3FF]/5 flex items-center justify-center text-zinc-400 hover:text-[#00A3FF] transition-all duration-300"
-                    >
-                      <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-                    </a>
+                  {/* Card Image */}
+                  <div
+                    onClick={() => setSelectedProject(proj)}
+                    className={`${proj.imgHeight} w-full relative overflow-hidden rounded-sm bg-[#D8D7D2] cursor-pointer`}
+                  >
+                    <Image
+                      src={proj.image}
+                      alt={proj.title}
+                      fill
+                      sizes="(max-width: 768px) 300px, 400px"
+                      className="object-cover filter grayscale contrast-[1.08] brightness-[0.88] hover:grayscale-0 hover:brightness-100 transition-all duration-700 ease-out"
+                    />
                   </div>
                 </div>
               </div>
