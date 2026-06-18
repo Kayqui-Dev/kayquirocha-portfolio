@@ -3,7 +3,6 @@ import Hero from "@/components/Hero";
 import Statement from "@/components/Statement";
 import ProjectGallery from "@/components/ProjectGallery";
 import TechStack from "@/components/TechStack";
-import ProjetosAutorais from "@/components/ProjetosAutorais";
 import WrestlingMindset from "@/components/WrestlingMindset";
 import Footer from "@/components/Footer";
 
@@ -23,9 +22,6 @@ export default function Home() {
 
         {/* Seção 02 / Arsenal Tecnológico */}
         <TechStack />
-
-        {/* Seção 04 / Projetos Autorais */}
-        <ProjetosAutorais />
 
         {/* Seção 05 / Mindset de Atleta */}
         <WrestlingMindset />
