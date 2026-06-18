@@ -25,7 +25,7 @@ export default function About() {
     {
       title: "Comunicação",
       desc: "Inglês Nível B2 (Intermediário Avançado)",
-      subDesc: "Foco em documentação e colaboração global",
+      subDesc: "Colaboração global e leitura técnica fluida",
     },
     {
       title: "Atuação Profissional",
@@ -47,26 +47,41 @@ export default function About() {
   ];
 
   return (
-    <section id="sobre" className="py-32 md:py-48 border-t border-white/[0.05] bg-transparent">
+    <section id="sobre" className="py-32 md:py-48 border-t border-white/[0.05] bg-black relative">
       <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-20">
-        {/* Section Header */}
+        
+        {/* Section Header (Lando message style) */}
         <motion.div
           variants={revealVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-3"
         >
-          <span className="section-tag">01 / Sobre Mim</span>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter text-white leading-none font-serif">
-            Entre o código e o tatame.
+          <span className="section-tag">01 / Mensagem</span>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans">
+            MENSAGEM DE KAYQUI
           </h2>
-          <div className="w-12 h-[2px] bg-red-500"></div>
+          <div className="w-16 h-[2px] bg-accent-lime mt-1"></div>
         </motion.div>
 
-        {/* 2-Column Split: Bio Narrative (Left) & Dual Identity Image (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left Column: Biography Narrative & Stats Grid */}
+        {/* Lando-Style Statement Text */}
+        <motion.div
+          variants={revealVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="max-w-4xl"
+        >
+          <p className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight font-sans">
+            <span className="text-accent-lime">Redefinindo</span> limites, lutando por <span className="text-accent-lime">vitórias</span> e entregando o meu melhor em cada linha de código. Construindo um <span className="text-accent-lime">legado</span> em engenharia de software e Wrestling, dentro e fora do tatame.
+          </p>
+        </motion.div>
+
+        {/* 2-Column Split: Bio Narrative & Stats (Left) & Dual Image Mask (Right) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center mt-6">
+          
+          {/* Left Column */}
           <div className="lg:col-span-7 flex flex-col gap-10">
             <motion.div
               variants={revealVariants}
@@ -76,21 +91,13 @@ export default function About() {
               className="flex flex-col gap-6 text-zinc-400 text-base md:text-lg font-normal leading-relaxed font-sans"
             >
               <p>
-                Iniciei minha jornada no mundo do desenvolvimento aos **11 anos**. O que começou como curiosidade
-                rapidamente se tornou uma vocação profissional e um compromisso com a excelência técnica. Essa imersão 
-                precoce me permitiu desenvolver maturidade profissional e capacidade técnica sólida bem antes da maioria,
-                sempre focando em resolver problemas reais por meio de linhas de código precisas.
+                Iniciei minha jornada técnica aos **11 anos** guiado por uma curiosidade profunda por código. O que começou como diversão rapidamente se transformou em uma busca obstinada pela excelência e maturidade em engenharia de sistemas.
               </p>
               <p>
-                Atualmente, curso **Análise e Desenvolvimento de Sistemas na FMU** e sou formado em **Inteligência Artificial**
-                pela **Zenithon Academy**. Minha rotina é guiada pelo alto desempenho. Entre o desenvolvimento de aplicações full-stack,
-                integração de IA e automatização de fluxos, eu mantenho um compromisso sério com a minha preparação como
-                **atleta competitivo de Luta Livre (Wrestling)** afiliado ao **NTG (National Training Group)**.
+                Minha rotina exige dedicação total de alta performance. Além de gerenciar a **Kodava Solutions** e integrar automações de IA, treino Luta Livre Olímpica de alto rendimento afiliado ao **NTG (National Training Group)**.
               </p>
               <p>
-                Acredito que o desenvolvimento de software e a luta de alta performance compartilham a mesma essência: 
-                a consistência silenciosa dos treinos diários, o estudo tático dos problemas e a persistência obstinada 
-                em buscar a vitória, seja refatorando um código complexo ou disputando um lugar no topo do pódio.
+                Entendo que o tatame e o código compartilham o mesmo DNA: ambos demandam consistência extrema, resiliência silenciosa nas sessões diárias e foco imperturbável na meta final.
               </p>
             </motion.div>
 
@@ -103,11 +110,11 @@ export default function About() {
               className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8 border-t border-white/5 select-none"
             >
               {stats.map((stat, idx) => (
-                <div key={idx}>
-                  <p className="text-3xl md:text-4xl font-mono tracking-tight text-white font-bold">
+                <div key={idx} className="border-l border-zinc-800 pl-4">
+                  <p className="text-3xl md:text-4xl font-mono tracking-tight text-white font-black">
                     {stat.value}
                   </p>
-                  <p className="text-[10px] text-zinc-500 tracking-widest uppercase mt-2 font-mono">
+                  <p className="text-[10px] text-zinc-500 tracking-widest uppercase mt-2 font-mono font-bold">
                     {stat.label}
                   </p>
                 </div>
@@ -115,7 +122,7 @@ export default function About() {
             </motion.div>
           </div>
 
-          {/* Right Column: Interactive Image component */}
+          {/* Right Column: Dynamic Image */}
           <motion.div
             variants={revealVariants}
             initial="hidden"
@@ -127,7 +134,7 @@ export default function About() {
           </motion.div>
         </div>
 
-        {/* Bottom Bento Facts Grid (4 columns on desktop) */}
+        {/* Bento highlights */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
           {bentoFacts.map((fact, idx) => (
             <motion.div
@@ -136,16 +143,16 @@ export default function About() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ delay: idx * 0.1 }}
-              className="p-6 rounded-xl bg-zinc-950/40 border border-white/5 backdrop-blur-md hover:border-white/10 transition-all duration-300 select-none"
+              transition={{ delay: idx * 0.15 }}
+              className="p-6 rounded-sm bg-zinc-950/60 border border-white/5 hover:border-accent-lime/30 transition-all duration-300 select-none group"
             >
-              <p className="font-mono text-[10px] text-white uppercase tracking-wider mb-2 font-bold">
+              <p className="font-mono text-[9px] text-accent-lime uppercase tracking-wider mb-3 font-bold group-hover:translate-x-1 transition-transform duration-300">
                 {fact.title}
               </p>
-              <p className="text-zinc-500 text-sm">
+              <p className="text-white text-sm font-semibold tracking-tight font-sans">
                 {fact.desc}
               </p>
-              <p className="text-zinc-500 text-sm mt-0.5">
+              <p className="text-zinc-500 text-xs mt-1.5 font-sans">
                 {fact.subDesc}
               </p>
             </motion.div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function WrestlingMindset() {
   const revealVariants = {
@@ -15,106 +16,129 @@ export default function WrestlingMindset() {
     },
   };
 
-  const COMPARISONS = [
-    {
-      title: "Consistência Diária",
-      combat: "Treinos diários no NTG refinando cada queda, posição de controle e explosão física até a exaustão.",
-      code: "Escrever código limpo, refatorar pontos críticos de performance e automatizar processos repetitivos de forma obstinada.",
-    },
-    {
-      title: "Resiliência Sob Pressão",
-      combat: "Manter a calma no tapete quando o oponente está em vantagem e usar técnica para reverter a luta.",
-      code: "Depurar erros complexos em produção ou lidar com picos de tráfego estruturando soluções friamente.",
-    },
-    {
-      title: "Estratégia & Adaptação",
-      combat: "Análise tática (scouting) do oponente para desenhar a estratégia perfeita de ataque e defesa.",
-      code: "Escolher a arquitetura ideal (Supabase, microsserviços, IA) para solucionar os gargalos de negócio com o menor custo.",
-    },
-  ];
-
   return (
-    <section id="mindset" className="py-32 md:py-48 border-t border-white/[0.05] bg-[#000000]">
-      <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        {/* Left column: Text narrative and NTG badge */}
+    <section id="mindset" className="py-32 md:py-48 border-t border-white/[0.05] bg-black">
+      <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-16">
+        
+        {/* Section Header */}
         <motion.div
           variants={revealVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
-          className="lg:col-span-5 flex flex-col gap-6"
+          className="flex flex-col gap-4"
         >
-          <div className="flex flex-col gap-4">
-            <span className="section-tag">05 / Mindset de Atleta</span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none font-serif">
-              A Disciplina do Tatame <br />
-              <span className="text-red-500 font-serif">na Engenharia.</span>
-            </h2>
-            <div className="w-12 h-[2px] bg-red-500 mt-2"></div>
-          </div>
-          
-          <p className="text-sm text-zinc-400 leading-relaxed font-sans">
-            A Luta Livre Olímpica (Wrestling) não é apenas um esporte de força; é um xadrez humano de alavanca, 
-            estratégia e pura resiliência mental. Como atleta federado e membro ativo do 
-            <strong> NTG (National Training Group)</strong>, trago a disciplina inabalável dos treinos 
-            de alta performance para o desenvolvimento de software.
+          <span className="section-tag">05 / Estilo de Vida</span>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans">
+            ON TRACK & OFF TRACK
+          </h2>
+          <div className="w-16 h-[2px] bg-accent-lime"></div>
+          <p className="text-zinc-400 text-sm max-w-xl font-sans">
+            Alta performance em duas frentes. A disciplina inabalável aplicada dentro e fora do tatame de Luta Livre.
           </p>
-
-          <blockquote className="border-l border-red-500 pl-4 py-1 my-2">
-            <p className="text-xs font-mono text-zinc-300 italic">
-              &ldquo;No wrestling, não há atalhos. Você ganha na preparação silenciosa antes de pisar no tapete. No código, o princípio é o mesmo: a qualidade do software é reflexo da disciplina na sua arquitetura.&rdquo;
-            </p>
-          </blockquote>
-
-          {/* NTG / Medals Stats Badge */}
-          <div className="flex items-center gap-4 p-4 rounded-sm bg-red-950/[0.03] border border-red-500/10 w-fit select-none">
-            <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-sm font-bold font-mono">
-              ★
-            </div>
-            <div>
-              <p className="text-xs font-mono text-white font-bold uppercase tracking-wider">NTG Affiliate</p>
-              <p className="text-[10px] text-zinc-500">Atleta de Luta Livre / Medalhista de Torneios</p>
-            </div>
-          </div>
         </motion.div>
 
-        {/* Right column: Comparison grid */}
-        <div className="lg:col-span-7 flex flex-col gap-4">
-          {COMPARISONS.map((item, index) => (
-            <motion.div
-              key={item.title}
-              variants={revealVariants}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ delay: index * 0.15 }}
-              className="p-6 rounded-sm bg-white/[0.01] border border-white/[0.03] hover:border-red-500/10 hover:bg-red-950/[0.01] transition-all duration-300 group select-none"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <span className="font-mono text-xs text-red-500 font-bold">
-                  0{index + 1}
-                </span>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-sans">
-                  {item.title}
-                </h3>
-              </div>
+        {/* Lando-style double card split */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          {/* Card 1: ON TRACK (Wrestling / Combat) */}
+          <motion.div
+            variants={revealVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-100px" }}
+            className="relative h-[450px] sm:h-[500px] rounded-sm overflow-hidden flex flex-col justify-end p-8 border border-white/5 bg-[#041E15]/30 group select-none"
+          >
+            {/* Background image */}
+            <div className="absolute inset-0 w-full h-full -z-10 bg-black">
+              <Image
+                src="/kayqui_wrestler.png"
+                alt="Wrestling Atleta NTG"
+                fill
+                sizes="(max-width: 768px) 100vw, 550px"
+                className="object-cover filter grayscale contrast-125 brightness-[0.2] group-hover:scale-105 group-hover:brightness-[0.3] transition-all duration-700 ease-out"
+              />
+              {/* Emerald dark green gradient glow */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-[#041E15]/30"></div>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans leading-relaxed">
-                <div>
-                  <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
-                    No Tatame (Wrestling)
-                  </p>
-                  <p className="text-zinc-400">{item.combat}</p>
-                </div>
-                <div className="border-t sm:border-t-0 sm:border-l border-white/[0.05] pt-3 sm:pt-0 sm:pl-4">
-                  <p className="text-[10px] font-mono text-red-500/70 uppercase tracking-widest mb-1">
-                    No Teclado (Código)
-                  </p>
-                  <p className="text-zinc-300">{item.code}</p>
-                </div>
+            {/* Content info */}
+            <div className="z-10">
+              <span className="font-mono text-[9px] tracking-[0.2em] text-accent-lime font-bold uppercase mb-2 block">
+                — ATLETISMO DE ELITE (WRESTLING)
+              </span>
+              
+              {/* Massive letters */}
+              <h3 className="text-5xl sm:text-7xl font-black tracking-tighter text-white uppercase leading-none font-sans group-hover:text-accent-lime transition-colors duration-300">
+                ON <br />
+                TRACK
+              </h3>
+
+              <p className="text-zinc-400 text-sm leading-relaxed max-w-md mt-6 font-sans">
+                Rotina intensa de treinos diários como atleta federado do **NTG (National Training Group)**. O Wrestling olímpico exige resiliência mental fria e preparação silenciosa antes de pisar no tapete.
+              </p>
+
+              {/* Highlights tags */}
+              <div className="flex flex-wrap gap-2 mt-6 border-t border-white/5 pt-6 font-mono text-[9px] text-zinc-500 uppercase font-bold">
+                <span className="text-accent-lime">★ NTG Competitivo</span>
+                <span>• Prata no Paulista (CBW)</span>
+                <span>• Disciplina Física</span>
               </div>
-            </motion.div>
-          ))}
+            </div>
+
+            {/* Border bottom indicator */}
+            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-zinc-900 group-hover:bg-accent-lime transition-colors duration-500"></div>
+          </motion.div>
+
+          {/* Card 2: OFF TRACK (Developer / Tech Lead) */}
+          <motion.div
+            variants={revealVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-100px" }}
+            className="relative h-[450px] sm:h-[500px] rounded-sm overflow-hidden flex flex-col justify-end p-8 border border-white/5 bg-zinc-950/40 group select-none"
+          >
+            {/* Background image */}
+            <div className="absolute inset-0 w-full h-full -z-10 bg-black">
+              <Image
+                src="/kayqui_developer.jpg"
+                alt="Software Engineer Developer"
+                fill
+                sizes="(max-width: 768px) 100vw, 550px"
+                className="object-cover filter grayscale contrast-115 brightness-[0.2] group-hover:scale-105 group-hover:brightness-[0.28] transition-all duration-700 ease-out"
+              />
+              {/* Dark studio gradient glow */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+            </div>
+
+            {/* Content info */}
+            <div className="z-10">
+              <span className="font-mono text-[9px] tracking-[0.2em] text-accent-lime font-bold uppercase mb-2 block">
+                — ENGENHARIA DE SOFTWARE & IA
+              </span>
+              
+              {/* Massive letters */}
+              <h3 className="text-5xl sm:text-7xl font-black tracking-tighter text-white uppercase leading-none font-sans group-hover:text-accent-lime transition-colors duration-300">
+                OFF <br />
+                TRACK
+              </h3>
+
+              <p className="text-zinc-400 text-sm leading-relaxed max-w-md mt-6 font-sans">
+                Fundação da **Kodava Solutions** e atuação como Desenvolvedor Full-Stack na **VTP**. Desenvolvimento de produtos digitais, integrações inteligentes de APIs de Inteligência Artificial e automações de fluxos de processos.
+              </p>
+
+              {/* Highlights tags */}
+              <div className="flex flex-wrap gap-2 mt-6 border-t border-white/5 pt-6 font-mono text-[9px] text-zinc-500 uppercase font-bold">
+                <span className="text-accent-lime">★ Kodava Founder</span>
+                <span>• Full-Stack na VTP</span>
+                <span>• Automações Inteligentes</span>
+              </div>
+            </div>
+
+            {/* Border bottom indicator */}
+            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-zinc-900 group-hover:bg-accent-lime transition-colors duration-500"></div>
+          </motion.div>
+
         </div>
       </div>
     </section>

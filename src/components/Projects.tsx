@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import ProjectModal from "./ProjectModal";
 
 const EXPERIENCES = [
@@ -9,14 +10,14 @@ const EXPERIENCES = [
     role: "Fundador & Tech Lead",
     company: "Kodava Solutions",
     period: "2024 — Presente",
-    desc: "Fundação e liderança técnica no desenvolvimento de sistemas web corporativos, automação inteligente e integrações customizadas de Inteligência Artificial para otimização de operações empresariais.",
+    desc: "Liderança técnica no desenvolvimento de sistemas web corporativos, automação inteligente com IA e orquestrações customizadas com n8n para otimização operacional.",
     tags: ["React", "Python", "Supabase", "n8n", "AI APIs"],
   },
   {
     role: "Desenvolvedor Full-Stack",
     company: "VTP",
     period: "2023 — Presente",
-    desc: "Criação, refatoração e manutenção de plataformas web de ponta a ponta. Foco constante em arquitetura limpa, escalabilidade, segurança e refinamento de performance de carregamento (Core Web Vitals).",
+    desc: "Engenharia de plataformas web ponta a ponta. Foco constante em arquitetura limpa, escalabilidade, segurança e otimização de performance (Core Web Vitals).",
     tags: ["React", "PHP", "JavaScript", "SQL", "Tailwind"],
   },
 ];
@@ -25,8 +26,9 @@ const PROJECTS = [
   {
     title: "Centurion Scout",
     type: "Combate & Performance",
-    desc: "Sistema especializado de scouting tático e base de dados detalhada para treinadores e atletas de esportes de combate (Wrestling, MMA, Jiu-Jitsu). Permite registrar métricas de performance, padrões de luta e análise estatística de adversários.",
-    longDesc: "O Centurion Scout é uma plataforma inovadora criada na intersecção entre tecnologia de ponta e esportes de combate. Ele resolve o gargalo de análise tática subjetiva em artes marciais, trazendo dados objetivos e mapas visuais detalhados para treinadores, atletas olímpicos e lutadores profissionais estruturarem seus planos de luta (Wrestling, MMA e Jiu-Jitsu).",
+    year: "2025",
+    desc: "Sistema tático de scouting e analytics para treinadores e atletas de esportes de combate (Wrestling, MMA, Jiu-Jitsu). Heatmaps e análise preditiva de oponentes.",
+    longDesc: "O Centurion Scout é uma plataforma inovadora criada na intersecção entre tecnologia de ponta e esportes de combate. Ele resolve o gargalo de análise tática subjetiva em artes marciais, trazendo dados objetivos e mapas visuais detalhados para treinadores, atletas olímpicos e lutadores profissionais estruturarem seus planos de luta.",
     architecture: [
       "Next.js (App Router) + TypeScript no frontend.",
       "Banco de dados relacional PostgreSQL.",
@@ -40,13 +42,15 @@ const PROJECTS = [
       "Exportação de relatórios táticos completos em PDF."
     ],
     dbFlow: "Supabase PostgreSQL -> Tabelas relacionais vinculando 'Atletas', 'Lutas' e 'Ações'. Cada pontuação no tatame dispara uma inserção em tempo real que atualiza os heatmaps instantaneamente via real-time triggers, estruturada sob políticas rígidas de segurança por perfil.",
-    tags: ["Next.js", "Supabase", "TypeScript", "Tailwind CSS", "PostgreSQL"],
+    tags: ["Next.js", "Supabase", "TypeScript", "Tailwind", "PostgreSQL"],
+    image: "/kayqui_wrestler.png",
     featured: true,
   },
   {
     title: "Decide Aí Vida",
     type: "Utilitário Inteligente",
-    desc: "Aplicativo inteligente que ajuda na tomada de decisão estruturada. Utiliza lógica avançada e processamento de IA para ponderar cenários cotidianos e reduzir a fadiga de escolha dos usuários.",
+    year: "2024",
+    desc: "Aplicativo inteligente que ajuda na tomada de decisão estruturada. Utiliza lógica avançada e processamento de IA para ponderar cenários e reduzir a fadiga de escolha.",
     longDesc: "O Decide Aí Vida é uma ferramenta de produtividade e análise cognitiva desenvolvida para combater a fadiga de escolha cotidiana. A aplicação utiliza modelos avançados de Inteligência Artificial para analisar cenários ponderando os prós, contras, riscos e potenciais recompensas das decisões tomadas pelos usuários.",
     architecture: [
       "Frontend multiplataforma em React Native.",
@@ -62,6 +66,7 @@ const PROJECTS = [
     ],
     dbFlow: "React Native -> API Gateway (Python FastAPI) -> OpenAI/Gemini API para avaliação estruturada. Os dados da decisão do usuário são processados e armazenados localmente de forma segura, com registros agregados anonimizados para estatísticas de comportamento.",
     tags: ["React Native", "Python", "AI APIs", "FastAPI"],
+    image: "/kayqui_developer.jpg",
     featured: false,
   },
 ];
@@ -69,7 +74,6 @@ const PROJECTS = [
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<(typeof PROJECTS)[0] | null>(null);
 
-  // Scroll Reveal Animations Settings
   const revealVariants = {
     hidden: { opacity: 0, y: 30 },
     show: {
@@ -84,8 +88,9 @@ export default function Projects() {
 
   return (
     <>
-      <section id="projetos" className="py-32 md:py-48 border-t border-white/[0.05] bg-[#000000]">
+      <section id="projetos" className="py-32 md:py-48 border-t border-white/[0.05] bg-black">
         <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-20">
+          
           {/* Experience Section */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
             <motion.div
@@ -95,16 +100,17 @@ export default function Projects() {
               viewport={{ once: true, margin: "-100px" }}
               className="md:col-span-4 flex flex-col gap-4"
             >
-              <span className="section-tag">03 / Experiência</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tighter text-white leading-none font-serif">
-                Atuação no Mercado
+              <span className="section-tag">04 / Experiência</span>
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans">
+                ATUAÇÃO NO MERCADO
               </h2>
-              <p className="text-zinc-500 text-xs max-w-xs leading-relaxed font-mono mt-1">
+              <div className="w-16 h-[2px] bg-accent-lime"></div>
+              <p className="text-zinc-500 text-xs max-w-xs leading-relaxed font-mono">
                 Minha trajetória como desenvolvedor construindo soluções robustas desde os primeiros passos na programação.
               </p>
             </motion.div>
 
-            <div className="md:col-span-8 flex flex-col gap-8">
+            <div className="md:col-span-8 flex flex-col gap-6">
               {EXPERIENCES.map((exp, idx) => (
                 <motion.div
                   key={exp.company}
@@ -113,12 +119,12 @@ export default function Projects() {
                   whileInView="show"
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ delay: idx * 0.15 }}
-                  className="p-6 rounded-sm bg-white/[0.01] border border-white/[0.03] hover:border-white/[0.08] transition-all duration-300"
+                  className="p-6 rounded-sm bg-zinc-950/60 border border-white/5 hover:border-accent-lime/30 transition-all duration-300 select-none group"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                     <div>
                       <h3 className="text-base font-bold text-white font-sans">{exp.role}</h3>
-                      <p className="text-xs font-mono text-red-500 font-semibold">{exp.company}</p>
+                      <p className="text-xs font-mono text-accent-lime font-bold uppercase">{exp.company}</p>
                     </div>
                     <span className="text-xs font-mono text-zinc-500">{exp.period}</span>
                   </div>
@@ -129,7 +135,7 @@ export default function Projects() {
                     {exp.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2 py-0.5 rounded-sm bg-white/[0.02] border border-white/[0.05] text-[10px] font-mono text-zinc-400"
+                        className="px-2 py-0.5 rounded-sm bg-white/[0.02] border border-white/[0.05] text-[10px] font-mono text-zinc-400 group-hover:text-white transition-colors duration-300"
                       >
                         {tag}
                       </span>
@@ -140,7 +146,7 @@ export default function Projects() {
             </div>
           </div>
 
-          {/* Featured Projects Section */}
+          {/* Featured Projects Section (Helmet Hall of Fame Replica) */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start pt-12 border-t border-white/[0.03]">
             <motion.div
               variants={revealVariants}
@@ -149,16 +155,18 @@ export default function Projects() {
               viewport={{ once: true, margin: "-100px" }}
               className="md:col-span-4 flex flex-col gap-4"
             >
-              <span className="section-tag">04 / Projetos</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tighter text-white leading-none font-serif">
-                Projetos Autorais
+              <span className="section-tag">05 / Showcase</span>
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans">
+                PROJETOS AUTORAIS
               </h2>
-              <p className="text-zinc-500 text-xs max-w-xs leading-relaxed font-mono mt-1">
-                Aplicações construídas para resolver problemas reais de nicho, fundindo tecnologia com paixões pessoais. Clique para ver detalhes técnicos.
+              <div className="w-16 h-[2px] bg-accent-lime"></div>
+              <p className="text-zinc-500 text-xs max-w-xs leading-relaxed font-mono">
+                Modelos interativos com revelação dupla em hover. Toque ou clique para abrir a arquitetura detalhada e fluxo de dados.
               </p>
             </motion.div>
 
-            <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Helmet Grid replica */}
+            <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
               {PROJECTS.map((proj, idx) => (
                 <motion.div
                   key={proj.title}
@@ -168,44 +176,57 @@ export default function Projects() {
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ delay: idx * 0.15 }}
                   onClick={() => setSelectedProject(proj)}
-                  className={`p-6 rounded-sm bg-white/[0.01] border transition-all duration-300 flex flex-col justify-between cursor-pointer ${
-                    proj.featured
-                      ? "border-red-500/20 hover:border-red-500/40 bg-red-950/[0.01]"
-                      : "border-white/[0.03] hover:border-white/[0.08]"
-                  }`}
+                  className="relative h-[340px] rounded-sm overflow-hidden flex flex-col justify-end p-6 border border-white/5 bg-zinc-950/60 cursor-pointer select-none group"
                 >
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-4">
-                      <span className="text-[10px] font-mono text-zinc-500 uppercase">
-                        {proj.type}
-                      </span>
-                      {proj.featured && (
-                        <span className="px-1.5 py-0.5 rounded-sm bg-red-500/10 border border-red-500/20 text-[9px] font-mono text-red-400 uppercase font-semibold">
-                          Destaque
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="text-base font-bold text-white tracking-tight mb-2 font-serif">
+                  {/* Background Image: Hidden/Dark in base, fades and zooms in on Hover */}
+                  <div className="absolute inset-0 w-full h-full -z-10 bg-black">
+                    <Image
+                      src={proj.image}
+                      alt={proj.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 380px"
+                      className="object-cover filter grayscale contrast-125 brightness-[0.05] group-hover:brightness-[0.25] group-hover:scale-105 transition-all duration-700 ease-out"
+                    />
+                    {/* Glowing green overlay fade in on Hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent group-hover:via-accent-lime-muted/20 transition-all duration-500"></div>
+                  </div>
+
+                  {/* Top Metadata */}
+                  <div className="flex items-center justify-between mb-auto z-10">
+                    <span className="text-[9px] font-mono tracking-widest text-accent-lime uppercase font-bold">
+                      {proj.type}
+                    </span>
+                    <span className="text-[9px] font-mono tracking-widest text-zinc-500 uppercase px-1.5 py-0.5 rounded-sm bg-white/[0.02] border border-white/[0.05]">
+                      {proj.year}
+                    </span>
+                  </div>
+
+                  {/* Content details */}
+                  <div className="z-10 mt-6">
+                    {/* Title */}
+                    <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight uppercase leading-none mb-2 font-sans group-hover:text-accent-lime transition-colors duration-300">
                       {proj.title}
                     </h3>
-                    <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-6">
+                    
+                    {/* Desc */}
+                    <p className="text-xs text-zinc-400 leading-relaxed font-sans mb-5 line-clamp-3">
                       {proj.desc}
                     </p>
                   </div>
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    {proj.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 rounded-sm bg-white/[0.02] border border-white/[0.05] text-[9px] font-mono text-zinc-400"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+
+                  {/* Bottom details block (Helmets footer style) */}
+                  <div className="flex items-center justify-between border-t border-white/5 pt-3 z-10">
+                    <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest font-bold">Ver Arquitetura</span>
+                    <span className="text-[12px] text-accent-lime group-hover:translate-x-1.5 transition-transform duration-300">→</span>
                   </div>
+
+                  {/* Indicator bottom line */}
+                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-zinc-900 group-hover:bg-accent-lime transition-colors duration-500"></div>
                 </motion.div>
               ))}
             </div>
           </div>
+
         </div>
       </section>
 

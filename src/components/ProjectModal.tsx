@@ -29,7 +29,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="absolute inset-0 bg-black/85 backdrop-blur-md"
+        className="absolute inset-0 bg-black/90 backdrop-blur-md"
       />
 
       {/* Modal Card */}
@@ -38,10 +38,10 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 15 }}
         transition={{ type: "spring", duration: 0.5 }}
-        className="bg-zinc-950 border border-white/10 rounded-2xl w-full max-w-2xl overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)] relative z-10 flex flex-col max-h-[85vh] select-none"
+        className="bg-zinc-950 border border-white/10 rounded-sm w-full max-w-2xl overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)] relative z-10 flex flex-col max-h-[85vh] select-none"
       >
         {/* Header decoration */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-red-500/80 via-white/20 to-red-500/80"></div>
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-accent-lime/80 via-white/20 to-accent-lime/80"></div>
 
         {/* Close Button */}
         <button
@@ -58,10 +58,10 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         <div className="p-6 md:p-8 overflow-y-auto scrollbar-thin flex flex-col gap-6">
           {/* Title & Tag */}
           <div className="flex flex-col gap-2">
-            <span className="text-[9px] font-mono tracking-widest text-red-500 uppercase font-bold">
+            <span className="text-[9px] font-mono tracking-widest text-accent-lime uppercase font-bold">
               {project.type}
             </span>
-            <h3 className="text-3xl md:text-4xl font-black tracking-tighter text-white font-serif">
+            <h3 className="text-3xl md:text-4xl font-black tracking-tighter text-white uppercase font-sans">
               {project.title}
             </h3>
           </div>
@@ -81,7 +81,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
               <ul className="flex flex-col gap-2 font-mono text-[11px] text-zinc-500">
                 {project.architecture.map((item) => (
                   <li key={item} className="flex items-start gap-2">
-                    <span className="text-red-500 font-bold">•</span>
+                    <span className="text-accent-lime font-bold">•</span>
                     <span className="text-zinc-400">{item}</span>
                   </li>
                 ))}
@@ -96,7 +96,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
               <ul className="flex flex-col gap-2 font-sans text-xs text-zinc-400">
                 {project.features.map((feat) => (
                   <li key={feat} className="flex items-start gap-2">
-                    <span className="text-red-500 font-bold">✓</span>
+                    <span className="text-accent-lime font-bold">✓</span>
                     <span>{feat}</span>
                   </li>
                 ))}
@@ -109,7 +109,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
             <h4 className="text-xs font-mono tracking-wider text-white uppercase font-bold">
               🗄️ Fluxo de Dados (Database/Supabase)
             </h4>
-            <p className="font-mono text-[11px] text-zinc-400 leading-relaxed bg-zinc-900/40 border border-white/5 p-4 rounded-xl backdrop-blur-md">
+            <p className="font-mono text-[11px] text-zinc-400 leading-relaxed bg-zinc-900/40 border border-white/5 p-4 rounded-sm">
               {project.dbFlow}
             </p>
           </div>

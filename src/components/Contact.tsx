@@ -18,7 +18,7 @@ export default function Contact() {
   const CONTACT_LINKS = [
     {
       name: "GitHub",
-      href: "https://github.com",
+      href: "https://github.com/kayquirocha",
       detail: "@kayquirocha",
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,7 +28,7 @@ export default function Contact() {
     },
     {
       name: "LinkedIn",
-      href: "https://linkedin.com",
+      href: "https://linkedin.com/in/kayquirocha",
       detail: "Kayqui Rocha Godinho",
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,7 +59,7 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contato" className="py-32 md:py-48 border-t border-white/[0.05] bg-[#000000]">
+    <section id="contato" className="py-32 md:py-48 border-t border-white/[0.05] bg-black">
       <div className="max-w-7xl mx-auto w-full px-6 sm:px-12 md:px-16 flex flex-col gap-16">
         {/* Contact Header */}
         <motion.div
@@ -70,10 +70,11 @@ export default function Contact() {
           className="text-center max-w-xl mx-auto flex flex-col gap-4"
         >
           <span className="section-tag">06 / Contato</span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tighter text-white leading-none font-serif">
-            Vamos construir o próximo pódio juntos?
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans leading-none">
+            VAMOS CONSTRUIR O PRÓXIMO PÓDIO JUNTOS?
           </h2>
-          <p className="text-sm text-zinc-400 leading-relaxed font-sans">
+          <div className="w-16 h-[2px] bg-accent-lime mx-auto mt-1"></div>
+          <p className="text-sm text-zinc-400 leading-relaxed font-sans mt-2">
             Seja para desenvolver um sistema sob medida com IA, automatizar fluxos complexos da sua empresa, 
             ou trocar ideias sobre engenharia de software e Wrestling, sinta-se à vontade para se conectar.
           </p>
@@ -92,9 +93,9 @@ export default function Contact() {
               whileInView="show"
               viewport={{ once: true, margin: "-100px" }}
               transition={{ delay: idx * 0.1 }}
-              className="p-6 rounded-sm bg-white/[0.01] border border-white/[0.03] hover:border-white/[0.1] hover:bg-white/[0.02] transition-all duration-300 flex flex-col items-center text-center group select-none"
+              className="p-6 rounded-sm bg-zinc-950/60 border border-white/5 hover:border-accent-lime/30 hover:bg-zinc-900/10 transition-all duration-300 flex flex-col items-center text-center group select-none"
             >
-              <div className="w-10 h-10 rounded-full bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-zinc-400 group-hover:text-red-500 group-hover:border-red-500/20 transition-all duration-300 mb-4">
+              <div className="w-10 h-10 rounded-full bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-zinc-400 group-hover:text-accent-lime group-hover:border-accent-lime/20 transition-all duration-300 mb-4">
                 {link.icon}
               </div>
               <h3 className="text-sm font-semibold text-white tracking-tight mb-1 font-sans">
@@ -107,13 +108,13 @@ export default function Contact() {
           ))}
         </div>
 
-        {/* Footer info */}
-        <div className="flex flex-col sm:flex-row items-center justify-between border-t border-white/[0.05] pt-8 text-[10px] font-mono text-zinc-500 gap-4">
-          <p>© {new Date().getFullYear()} Kayqui Rocha Godinho. Todos os direitos reservados.</p>
-          <p className="flex items-center gap-1.5">
-            Construído com Next.js & Tailwind CSS
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-            Foco & Disciplina
+        {/* Footer info (Lando style always bringing the fight tag) */}
+        <div className="flex flex-col sm:flex-row items-center justify-between border-t border-white/5 pt-8 text-[10px] font-mono text-zinc-500 gap-4">
+          <p>© {new Date().getFullYear()} KAYQUI ROCHA GODINHO. TODOS OS DIREITOS RESERVADOS.</p>
+          <p className="flex items-center gap-1.5 uppercase font-bold text-[9px] tracking-wider text-zinc-400">
+            Foco, Disciplina & Código
+            <span className="w-1.5 h-1.5 rounded-full bg-accent-lime"></span>
+            Kodava Solutions
           </p>
         </div>
       </div>
