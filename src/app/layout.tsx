@@ -63,7 +63,7 @@ export default function RootLayout({
         <meta name="color-scheme" content="dark" />
       </head>
       <body className="min-h-screen flex flex-col bg-[#000000] text-[#f4f4f5]">
-        <SmoothScroll />
+        {/* <SmoothScroll /> */}
         {children}
       </body>
     </html>
