@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { 
   ArrowUpRight, 
   Database, 
@@ -15,6 +16,8 @@ import {
 } from "lucide-react";
 import BackgroundContours from "./BackgroundContours";
 import ProjectModal from "./ProjectModal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface ProjectDetails {
   title: string;
@@ -29,10 +32,10 @@ interface ProjectDetails {
   tags: string[];
   image: string;
   link: string;
-  colSpan: string;
+  offsetClass: string;
 }
 
-const BENTO_PROJECTS: ProjectDetails[] = [
+const GALLERY_PROJECTS: ProjectDetails[] = [
   {
     title: "Centurion Scout",
     type: "Combate & Performance",
@@ -55,7 +58,7 @@ const BENTO_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "supabase", "python", "tailwind"],
     image: "/centurion_scout.png",
     link: "https://www.centurionfight.shop/",
-    colSpan: "lg:col-span-2"
+    offsetClass: "-translate-y-12"
   },
   {
     title: "Kodava Barber SaaS",
@@ -78,7 +81,7 @@ const BENTO_PROJECTS: ProjectDetails[] = [
     tags: ["typescript", "react", "nodejs"],
     image: "/store_acai.png",
     link: "https://v0-kodava-crm.vercel.app/",
-    colSpan: "lg:col-span-1"
+    offsetClass: "translate-y-12"
   },
   {
     title: "Decide Aí Vida",
@@ -101,7 +104,7 @@ const BENTO_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "openai", "tailwind"],
     image: "/decide_ai_vida.png",
     link: "https://v0-kodava-crm.vercel.app/",
-    colSpan: "lg:col-span-1"
+    offsetClass: "-translate-y-8"
   },
   {
     title: "VTP Systems",
@@ -124,7 +127,7 @@ const BENTO_PROJECTS: ProjectDetails[] = [
     tags: ["javascript", "php", "mysql"],
     image: "/vtpsystem_scraped.png",
     link: "https://vtpsystem.com.br/login.php",
-    colSpan: "lg:col-span-1"
+    offsetClass: "translate-y-8"
   },
   {
     title: "Emporio Glass",
@@ -147,7 +150,7 @@ const BENTO_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "typescript", "nodejs", "mysql"],
     image: "/emporioglass_scraped.png",
     link: "https://emporioglass.com/",
-    colSpan: "lg:col-span-2"
+    offsetClass: "-translate-y-12"
   },
   {
     title: "Love Kodava Shop",
@@ -170,7 +173,7 @@ const BENTO_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "supabase", "tailwind"],
     image: "/lovekodavashop_scraped.png",
     link: "https://www.love-kodava.shop/",
-    colSpan: "lg:col-span-1"
+    offsetClass: "translate-y-12"
   },
   {
     title: "Centurion Fight Shop",
@@ -193,7 +196,7 @@ const BENTO_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "nodejs", "shopify"],
     image: "/centurionfight_scraped.png",
     link: "https://www.centurionfight.shop/",
-    colSpan: "lg:col-span-1"
+    offsetClass: "-translate-y-8"
   },
   {
     title: "Kodava CRM",
@@ -216,7 +219,7 @@ const BENTO_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "supabase", "openai"],
     image: "/kodavacrm_scraped.png",
     link: "https://v0-kodava-crm.vercel.app/",
-    colSpan: "lg:col-span-1"
+    offsetClass: "translate-y-8"
   },
   {
     title: "Esporte NTG",
@@ -239,12 +242,12 @@ const BENTO_PROJECTS: ProjectDetails[] = [
     tags: ["nextjs", "tailwind", "postgresql"],
     image: "/esportentg.png",
     link: "https://esportentg.com.br/",
-    colSpan: "lg:col-span-2"
+    offsetClass: "-translate-y-12"
   }
 ];
 
 function TechIcon({ name }: { name: string }) {
-  const iconClass = "w-4 h-4 text-zinc-400 group-hover/card:text-[#00A3FF] transition-colors duration-300";
+  const iconClass = "w-4 h-4 text-zinc-500 group-hover/card:text-[#00A3FF] transition-colors duration-300";
   switch (name.toLowerCase()) {
     case "nextjs":
     case "react":
@@ -303,185 +306,186 @@ function TechIcon({ name }: { name: string }) {
   }
 }
 
-function TiltCard({ 
-  project, 
-  onClick,
-  colSpan 
-}: { 
-  project: ProjectDetails; 
-  onClick: () => void;
-  colSpan: string;
-}) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const rotateX = useTransform(y, [-200, 200], [8, -8]);
-  const rotateY = useTransform(x, [-200, 200], [-8, 8]);
-
-  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left - width / 2;
-    const mouseY = e.clientY - rect.top - height / 2;
-    x.set(mouseX);
-    y.set(mouseY);
-  };
-
-  const onMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.div
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
-      style={{
-        rotateX,
-        rotateY,
-        transformStyle: "preserve-3d",
-      }}
-      whileHover={{
-        scale: 1.015,
-        transition: { duration: 0.3, ease: "easeOut" }
-      }}
-      className={`group/card relative bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-2xl hover:border-[#00A3FF]/40 transition-all duration-500 cursor-pointer ${colSpan}`}
-    >
-      {/* 3D Floating elements */}
-      <div style={{ transform: "translateZ(30px)" }} className="flex flex-col gap-4 h-full">
-        {/* Top bar: Badge & Metadata */}
-        <div className="flex justify-between items-center select-none">
-          <span className="text-[9px] font-mono tracking-widest text-[#00A3FF] uppercase font-black bg-[#00A3FF]/5 border border-[#00A3FF]/15 px-2.5 py-1 rounded-md">
-            {project.status}
-          </span>
-          <span className="text-[10px] font-mono text-zinc-400 font-bold">
-            {project.year}
-          </span>
-        </div>
-
-        {/* Project Image screenshot */}
-        <div className="w-full aspect-[16/9] relative rounded-xl overflow-hidden border border-zinc-100 bg-zinc-50 shadow-inner">
-          <Image
-            src={project.image}
-            alt={project.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 450px"
-            className="object-cover filter brightness-[0.96] contrast-[1.01] group-hover/card:scale-103 transition-transform duration-700 ease-out"
-          />
-        </div>
-
-        {/* Text information */}
-        <div className="flex-1 flex flex-col justify-between">
-          <div>
-            <h3 className="text-xl md:text-2xl font-bold tracking-tight text-zinc-900 group-hover/card:text-[#00A3FF] transition-colors duration-300">
-              {project.title}
-            </h3>
-            <p className="text-zinc-500 text-xs md:text-sm mt-2 leading-relaxed font-sans">
-              {project.desc}
-            </p>
-          </div>
-
-          {/* Technology divider and icons row */}
-          <div>
-            <div className="w-full h-[1px] bg-zinc-100 my-4"></div>
-            <div className="flex justify-between items-center">
-              {/* Tech Stack List */}
-              <div className="flex gap-2">
-                {project.tags.map((tag) => (
-                  <TechIcon key={tag} name={tag} />
-                ))}
-              </div>
-
-              {/* Redirect link button */}
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  e.stopPropagation(); // Avoid opening the modal when clicking the link
-                }}
-                className="w-8 h-8 rounded-full border border-zinc-200 hover:border-[#00A3FF] hover:bg-[#00A3FF]/5 flex items-center justify-center text-zinc-400 hover:text-[#00A3FF] transition-all duration-300"
-              >
-                <ArrowUpRight className="w-4 h-4 group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 transition-transform duration-300" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function ProjectGallery() {
   const [selectedProject, setSelectedProject] = useState<ProjectDetails | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const trayRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
+  useEffect(() => {
+    const cards = cardsRef.current.filter(Boolean);
+    const tray = trayRef.current;
+    const container = containerRef.current;
+    if (!container || !tray || cards.length === 0) return;
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: [0.16, 1, 0.3, 1] as const,
-      },
-    },
-  };
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: () => `+=${tray.scrollWidth - window.innerWidth}`,
+          scrub: 1, // Synced with Lenis
+          pin: true,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Horizontal translation of the tray
+      tl.to(tray, {
+        x: () => -(tray.scrollWidth - window.innerWidth),
+        ease: "none",
+      });
+
+      // Staggered fade and pop-up animation for cards
+      tl.fromTo(
+        cards,
+        {
+          scale: 0.85,
+          opacity: 0,
+          y: 45,
+        },
+        {
+          scale: 1,
+          opacity: 1,
+          y: 0,
+          stagger: 0.05,
+          duration: 1.2,
+          ease: "power2.out" as const,
+        },
+        0.1
+      );
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <>
       <section
         id="project-gallery"
-        className="relative w-full bg-[#E3E2DC] py-24 sm:py-32 select-none border-t border-black/5"
+        ref={containerRef}
+        className="relative w-full h-screen bg-[#E3E2DC] flex flex-col justify-between py-16 overflow-hidden select-none border-t border-black/5"
       >
         {/* Premium Topographic Contour Lines Background */}
         <BackgroundContours light={true} />
 
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 flex flex-col gap-12 relative z-10">
-          {/* Top Section Tag */}
+        {/* Top Section Tag */}
+        <div className="w-full px-6 sm:px-12 md:px-24 flex justify-between items-start z-30 pointer-events-none">
           <div className="flex flex-col gap-2">
             <span className="section-tag text-[10px] font-mono tracking-widest text-[#00A3FF] uppercase font-bold">
               01 / Galeria de Projetos
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-[#1C1C1C] uppercase font-sans">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter text-[#1C1C1C] uppercase font-sans">
               GALERIA DE PROJETOS
             </h2>
             <div className="w-16 h-[2px] bg-[#00A3FF]"></div>
           </div>
+        </div>
 
-          {/* Asymmetric Bento Grid using Framer Motion */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mt-8"
+        {/* Center Section: Staggered Collage Tray */}
+        <div className="relative flex-1 w-full h-[70vh] flex items-center overflow-visible">
+          <div
+            ref={trayRef}
+            className="flex flex-nowrap h-full items-center pl-[10vw] pr-[20vw] gap-[8vw]"
+            style={{ width: "max-content" }}
           >
-            {BENTO_PROJECTS.map((proj, idx) => (
-              <motion.div
+            {GALLERY_PROJECTS.map((proj, idx) => (
+              <div
                 key={idx}
-                variants={cardVariants}
-                className={proj.colSpan}
+                ref={(el) => {
+                  cardsRef.current[idx] = el;
+                }}
+                className={`w-[260px] md:w-[320px] flex-shrink-0 flex flex-col gap-3 group select-none opacity-0 ${proj.offsetClass}`}
               >
-                <TiltCard
-                  project={proj}
+                {/* Metadata ABOVE the card */}
+                <div className="flex justify-between items-center w-full text-[10px] font-mono text-zinc-600 font-bold uppercase tracking-wider px-1">
+                  <span className="text-[#00A3FF]">{proj.status}</span>
+                  <span className="px-1.5 py-0.5 rounded-sm bg-black/5 border border-black/5 text-[9px] text-zinc-500">
+                    {proj.year}
+                  </span>
+                </div>
+
+                {/* Card Image */}
+                <div
                   onClick={() => setSelectedProject(proj)}
-                  colSpan={proj.colSpan}
-                />
-              </motion.div>
+                  className="w-full h-[320px] md:h-[400px] relative rounded-2xl overflow-hidden border border-black/8 bg-[#CFCFCA] shadow-[0_15px_35px_rgba(0,0,0,0.06)] cursor-pointer group-hover:border-[#00A3FF]/40 transition-all duration-500 group-hover:shadow-[0_20px_50px_rgba(0,163,255,0.08)]"
+                >
+                  <Image
+                    src={proj.image}
+                    alt={proj.title}
+                    fill
+                    sizes="(max-width: 768px) 260px, 320px"
+                    className="object-cover filter brightness-[0.9] contrast-[1.02] group-hover:scale-102 transition-all duration-700 ease-out"
+                  />
+                </div>
+
+                {/* Title and Footer BELOW the card */}
+                <div className="flex flex-col gap-2 px-1">
+                  <h4 className="text-xl md:text-2xl font-serif text-[#1C1C1C] uppercase font-bold leading-tight group-hover:text-[#00A3FF] transition-colors duration-300">
+                    {proj.title}
+                  </h4>
+                  
+                  {/* Hover Icons & Links */}
+                  <div className="flex justify-between items-center mt-1">
+                    <div className="flex gap-2">
+                      {proj.tags.map((tag) => (
+                        <TechIcon key={tag} name={tag} />
+                      ))}
+                    </div>
+                    
+                    <a
+                      href={proj.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-6 h-6 rounded-full border border-zinc-300 hover:border-[#00A3FF] hover:bg-[#00A3FF]/5 flex items-center justify-center text-zinc-400 hover:text-[#00A3FF] transition-all duration-300"
+                    >
+                      <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                    </a>
+                  </div>
+                </div>
+              </div>
             ))}
-          </motion.div>
+
+            {/* Staggered Quote & Signature at the end (Lando Norris style) */}
+            <div className="w-[320px] sm:w-[420px] flex-shrink-0 flex flex-col gap-6 p-6 sm:p-8 translate-y-4">
+              <p className="font-serif text-lg sm:text-xl md:text-2xl text-[#1C1C1C] leading-relaxed uppercase">
+                "Desde a primeira linha de código, dedico cada segundo a projetar arquiteturas implacáveis que redefinem o jogo."
+              </p>
+              {/* Signature SVG (Dark Ink) */}
+              <div className="text-[#1C1C1C] select-none">
+                <svg
+                  viewBox="0 0 200 80"
+                  className="w-40 h-16 filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.06)]"
+                  stroke="#1C1C1C"
+                  strokeWidth="2.5"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 50 Q45 25 70 30 T120 40 T150 20 T180 50" />
+                  <path d="M50 20 C60 10, 80 15, 75 45 C70 65, 45 60, 65 30 C85 0, 115 10, 105 40 T145 60" />
+                  <path d="M125 45 L155 45" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer line details (Light Theme) */}
+        <div className="w-full px-6 sm:px-12 md:px-24 flex justify-between items-end select-none text-[8px] font-mono text-zinc-500 uppercase tracking-widest z-30">
+          {/* Lando Norris style bottom-left checkered flag badge */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-black/5 bg-black/[0.02] shadow-[0_2px_5px_rgba(0,0,0,0.02)]">
+            <span className="font-sans font-black text-[#1C1C1C] text-[10px]">1</span>
+            <svg
+              className="w-3 h-3 text-[#1C1C1C]"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M2 22h2v-6H2v6zm4-12h2v6H6v-6zm4-4h2v10h-2V6zm4 6h2v4h-2v-4zm4-8h2v12h-2V4zm-16 6h2v2H2v-2zm12-4h2v2h-2V6zm-8 6h2v2H6v-2zm4-6h2v2h-2V6zm8 6h2v2h-2v-2zm-12 2h2v2H8v-2zm8-6h2v2h-2V8zm-4 6h2v2h-2v-2z" />
+            </svg>
+          </div>
+          <span>© 2026</span>
         </div>
       </section>
 
