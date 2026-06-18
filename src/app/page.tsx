@@ -8,7 +8,6 @@ import Hero from "@/components/Hero";
 import Statement from "@/components/Statement";
 import About from "@/components/About";
 import ProjectGallery from "@/components/ProjectGallery";
-import TechStack from "@/components/TechStack";
 import WrestlingMindset from "@/components/WrestlingMindset";
 import Footer from "@/components/Footer";
 
@@ -35,7 +34,7 @@ export default function Home() {
         },
       });
 
-      // 2. Transition back to DARK mode when leaving ProjectGallery into TechStack
+      // 2. Transition back to DARK mode when leaving ProjectGallery into About
       gsap.to([wrapper, "#project-gallery"], {
         backgroundColor: "#000000", // Back to deep dark
         color: "#f4f4f5", // Light text
@@ -58,7 +57,7 @@ export default function Home() {
       <main
         ref={globalWrapperRef}
         id="global-wrapper"
-        className="flex-1 flex flex-col bg-black text-[#f4f4f5] relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+        className="bg-black text-[#f4f4f5] relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.8)] w-full overflow-x-hidden"
       >
         {/* Starts with the fullscreen trophy hero section */}
         <Hero />
@@ -66,16 +65,13 @@ export default function Home() {
         {/* Giant typography statement (phrase) */}
         <Statement />
         
-        {/* Seção 01 / Sobre Mim */}
-        <About />
-        
         {/* Seção 01 / Galeria de Projetos */}
         <ProjectGallery />
+        
+        {/* Seção 02 / Sobre Mim */}
+        <About />
 
-        {/* Seção 02 / Arsenal Tecnológico */}
-        <TechStack />
-
-        {/* Seção 05 / Mindset de Atleta */}
+        {/* Seção 03 / Mindset de Atleta */}
         <WrestlingMindset />
       </main>
       

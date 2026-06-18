@@ -149,7 +149,7 @@ export default function WrestlingMindset() {
       <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 select-none z-20">
         <div className="flex flex-col gap-2">
           <span className="section-tag text-[10px] font-mono tracking-widest text-[#00A3FF] uppercase font-bold">
-            05 / Mindset de Atleta
+            03 / Mindset de Atleta
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter text-white uppercase font-sans">
             A Disciplina do Tatame na Engenharia.
