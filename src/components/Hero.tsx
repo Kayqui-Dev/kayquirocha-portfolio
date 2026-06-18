@@ -51,7 +51,11 @@ export default function Hero() {
   
   // Opacities for the message header and foreground signature
   const messageOpacity = useTransform(scrollYProgress, [0.15, 0.4], [0, 1]);
-  const signatureOpacity = useTransform(scrollYProgress, [0.15, 0.4], [0, 0.95]);
+  const signatureOpacity = useTransform(scrollYProgress, [0.15, 0.25], [0, 0.95]);
+
+  // Staggered writing path animations for the letter K
+  const stemPathLength = useTransform(scrollYProgress, [0.15, 0.28], [0, 1]);
+  const rightPathLength = useTransform(scrollYProgress, [0.28, 0.45], [0, 1]);
 
   // Load trophy image on mount
   useEffect(() => {
@@ -253,8 +257,17 @@ export default function Hero() {
           style={{ opacity: signatureOpacity }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65vw] max-w-[850px] aspect-video pointer-events-none select-none z-20 flex items-center justify-center"
         >
-          <svg viewBox="0 0 500 200" fill="none" stroke="#00A3FF" strokeWidth="2.8" className="w-full h-full filter drop-shadow-[0_2px_8px_rgba(0,163,255,0.35)]">
-            <path d="M 180 40 C 170 100, 180 160, 190 160 C 205 160, 210 120, 215 95 C 230 65, 260 50, 275 60 C 285 68, 270 90, 235 105 C 255 120, 280 140, 310 155 C 340 170, 380 165, 410 150" />
+          <svg viewBox="0 0 500 200" fill="none" stroke="#00A3FF" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full filter drop-shadow-[0_2px_8px_rgba(0,163,255,0.35)]">
+            {/* Stem of the K */}
+            <motion.path
+              d="M 170 40 C 160 30, 150 40, 150 60 C 150 100, 165 140, 170 160"
+              style={{ pathLength: stemPathLength }}
+            />
+            {/* Right side of the K */}
+            <motion.path
+              d="M 240 60 C 230 50, 200 70, 185 95 C 175 105, 170 115, 185 115 C 205 115, 235 135, 265 155 C 305 175, 360 170, 400 155"
+              style={{ pathLength: rightPathLength }}
+            />
           </svg>
         </motion.div>
 
