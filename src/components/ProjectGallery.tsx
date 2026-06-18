@@ -455,7 +455,7 @@ export default function ProjectGallery() {
       <section
         id="project-gallery"
         ref={containerRef}
-        className="relative z-10 w-full h-screen bg-[#E3E2DC] flex flex-col justify-between py-16 overflow-hidden select-none border-t border-black/5"
+        className="relative z-10 w-full h-screen bg-transparent flex flex-col justify-between py-16 overflow-hidden select-none border-t border-black/5"
       >
         {/* Premium Topographic Contour Lines Background */}
         <BackgroundContours light={true} />
@@ -494,22 +494,22 @@ export default function ProjectGallery() {
                     <span className="text-zinc-400">{proj.year}</span>
                   </div>
 
-                  {/* Browser Mockup Wrapper */}
+                  {/* Browser Mockup Wrapper (Dark Premium Theme) */}
                   <div
                     onClick={() => setSelectedProject(proj)}
-                    className="relative w-full border border-black/10 rounded-md overflow-hidden bg-[#ECECE7] shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer group-hover/card:shadow-[0_12px_30px_rgba(0,0,0,0.08)] group-hover/card:border-black/20 group-hover/card:scale-[1.01] transition-all duration-500 ease-out"
+                    className="relative w-full border border-white/10 rounded-md overflow-hidden bg-black/90 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.15)] cursor-pointer group-hover/card:shadow-[0_20px_50px_rgba(0,0,0,0.3)] group-hover/card:border-white/20 group-hover/card:scale-[1.01] transition-all duration-500 ease-out"
                   >
                     {/* Browser Window Header */}
-                    <div className="flex items-center justify-between px-3 py-1.5 border-b border-black/5 bg-[#E8E7E1] shrink-0 select-none">
+                    <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/5 bg-[#141517] shrink-0 select-none">
                       {/* Window Controls (Mac style colored dots) */}
                       <div className="flex items-center gap-1.5 w-12">
-                        <div className="w-2 h-2 rounded-full bg-[#FF5F56]/30 group-hover/card:bg-[#FF5F56] transition-colors duration-300"></div>
-                        <div className="w-2 h-2 rounded-full bg-[#FFBD2E]/30 group-hover/card:bg-[#FFBD2E] transition-colors duration-300"></div>
-                        <div className="w-2 h-2 rounded-full bg-[#27C93F]/30 group-hover/card:bg-[#27C93F] transition-colors duration-300"></div>
+                        <div className="w-2 h-2 rounded-full bg-[#FF5F56]/40 group-hover/card:bg-[#FF5F56] transition-colors duration-300"></div>
+                        <div className="w-2 h-2 rounded-full bg-[#FFBD2E]/40 group-hover/card:bg-[#FFBD2E] transition-colors duration-300"></div>
+                        <div className="w-2 h-2 rounded-full bg-[#27C93F]/40 group-hover/card:bg-[#27C93F] transition-colors duration-300"></div>
                       </div>
                       
                       {/* Address Bar URL */}
-                      <div className="flex-1 max-w-[65%] bg-black/[0.04] group-hover/card:bg-black/[0.06] rounded py-0.5 px-3 text-[9px] font-mono text-center truncate text-zinc-500 group-hover/card:text-[#1C1C1C] transition-colors duration-300">
+                      <div className="flex-1 max-w-[65%] bg-white/[0.04] group-hover/card:bg-white/[0.08] rounded py-0.5 px-3 text-[9px] font-mono text-center truncate text-zinc-400 group-hover/card:text-white transition-colors duration-300">
                         {proj.link.replace("https://", "").replace("www.", "")}
                       </div>
 
@@ -520,13 +520,13 @@ export default function ProjectGallery() {
                     </div>
 
                     {/* Website Viewport */}
-                    <div className={`${proj.imgHeight} relative w-full overflow-hidden bg-[#CFCFCA]`}>
+                    <div className={`${proj.imgHeight} relative w-full overflow-hidden bg-[#161719]`}>
                       <Image
                         src={proj.image}
                         alt={proj.title}
                         fill
                         sizes="(max-width: 768px) 300px, 400px"
-                        className="object-cover object-top filter grayscale sepia-[0.15] contrast-[1.05] brightness-[0.92] group-hover/card:grayscale-0 group-hover/card:sepia-0 group-hover/card:brightness-100 group-hover/card:contrast-100 transition-all duration-700 ease-out"
+                        className="object-cover object-top filter grayscale sepia-[0.05] contrast-[1.05] brightness-[0.88] group-hover/card:grayscale-0 group-hover/card:sepia-0 group-hover/card:brightness-100 group-hover/card:contrast-100 transition-all duration-700 ease-out"
                       />
                     </div>
                   </div>
