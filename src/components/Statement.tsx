@@ -16,7 +16,7 @@ export default function Statement() {
   };
 
   return (
-    <section id="statement" className="py-32 md:py-44 bg-transparent relative flex flex-col items-center justify-center text-center overflow-hidden select-none border-t border-white/[0.03]">
+    <section id="statement" className="pt-32 pb-16 md:pt-44 md:pb-20 bg-transparent relative flex flex-col items-center justify-center text-center overflow-hidden select-none border-t border-white/[0.03]">
       <motion.div
         variants={revealVariants}
         initial="hidden"

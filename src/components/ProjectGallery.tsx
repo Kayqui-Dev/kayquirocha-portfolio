@@ -337,20 +337,18 @@ export default function ProjectGallery() {
         ease: "none",
       });
 
-      // Staggered fade and pop-up animation for cards
+      // Staggered scale and subtle y-offset animation for cards (pre-revealed to avoid blank space)
       tl.fromTo(
         cards,
         {
-          scale: 0.85,
-          opacity: 0,
-          y: 45,
+          scale: 0.96,
+          y: 10,
         },
         {
           scale: 1,
-          opacity: 1,
           y: 0,
-          stagger: 0.05,
-          duration: 1.2,
+          stagger: 0.03,
+          duration: 1.0,
           ease: "power2.out" as const,
         },
         0.1
