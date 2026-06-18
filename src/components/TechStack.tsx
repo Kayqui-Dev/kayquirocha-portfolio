@@ -109,7 +109,7 @@ export default function TechStack() {
           viewport={{ once: true, margin: "-100px" }}
           className="flex flex-col gap-4"
         >
-          <span className="section-tag">03 / Tech Stack</span>
+          <span className="section-tag">01 / Tech Stack</span>
           <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans">
             ARSENAL TECNOLÓGICO
           </h2>

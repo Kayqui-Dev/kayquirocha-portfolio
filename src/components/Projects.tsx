@@ -100,7 +100,7 @@ export default function Projects() {
               viewport={{ once: true, margin: "-100px" }}
               className="md:col-span-4 flex flex-col gap-4"
             >
-              <span className="section-tag">04 / Experiência</span>
+              <span className="section-tag">02 / Experiência</span>
               <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans">
                 ATUAÇÃO NO MERCADO
               </h2>
@@ -155,7 +155,7 @@ export default function Projects() {
               viewport={{ once: true, margin: "-100px" }}
               className="md:col-span-4 flex flex-col gap-4"
             >
-              <span className="section-tag">05 / Showcase</span>
+              <span className="section-tag">03 / Showcase</span>
               <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans">
                 PROJETOS AUTORAIS
               </h2>

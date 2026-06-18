@@ -28,7 +28,7 @@ export default function WrestlingMindset() {
           viewport={{ once: true, margin: "-100px" }}
           className="flex flex-col gap-4"
         >
-          <span className="section-tag">05 / Estilo de Vida</span>
+          <span className="section-tag">04 / Estilo de Vida</span>
           <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans">
             ON TRACK & OFF TRACK
           </h2>

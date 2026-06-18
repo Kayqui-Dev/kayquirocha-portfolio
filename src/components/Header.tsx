@@ -6,11 +6,10 @@ import Image from "next/image";
 
 const MENU_ITEMS = [
   { label: "Home", href: "#", num: "01", image: "/kayqui_trophy.jpg", desc: "Abertura e mentalidade de alta performance" },
-  { label: "Sobre Mim", href: "#sobre", num: "02", image: "/kayqui_developer.jpg", desc: "História, biografia e bento fatos" },
-  { label: "Tech Stack", href: "#stack", num: "03", image: "/kayqui_developer.jpg", desc: "Arsenal tecnológico, linguagens e DevOps" },
-  { label: "Projetos", href: "#projetos", num: "04", image: "/kayqui_developer.jpg", desc: "Showcase de repositórios e cases de engenharia" },
-  { label: "Wrestling", href: "#mindset", num: "05", image: "/kayqui_wrestler.png", desc: "A disciplina do tatame aplicada ao código" },
-  { label: "Contato", href: "#contato", num: "06", image: "/kayqui_trophy.jpg", desc: "Parcerias, e-mail e canais sociais" },
+  { label: "Tech Stack", href: "#stack", num: "02", image: "/kayqui_developer.jpg", desc: "Arsenal tecnológico, linguagens e DevOps" },
+  { label: "Projetos", href: "#projetos", num: "03", image: "/kayqui_developer.jpg", desc: "Showcase de repositórios e cases de engenharia" },
+  { label: "Wrestling", href: "#mindset", num: "04", image: "/kayqui_wrestler.png", desc: "A disciplina do tatame aplicada ao código" },
+  { label: "Contato", href: "#contato", num: "05", image: "/kayqui_trophy.jpg", desc: "Parcerias, e-mail e canais sociais" },
 ];
 
 export default function Header() {

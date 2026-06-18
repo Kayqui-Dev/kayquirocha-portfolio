@@ -69,7 +69,7 @@ export default function Contact() {
           viewport={{ once: true, margin: "-100px" }}
           className="text-center max-w-xl mx-auto flex flex-col gap-4"
         >
-          <span className="section-tag">06 / Contato</span>
+          <span className="section-tag">05 / Contato</span>
           <h2 className="text-3xl sm:text-5xl font-black tracking-tighter text-white uppercase font-sans leading-none">
             VAMOS CONSTRUIR O PRÓXIMO PÓDIO JUNTOS?
           </h2>

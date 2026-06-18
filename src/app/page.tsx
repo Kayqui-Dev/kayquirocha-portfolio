@@ -1,7 +1,5 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
-import HorizontalTimeline from "@/components/HorizontalTimeline";
 import TechStack from "@/components/TechStack";
 import Projects from "@/components/Projects";
 import KineticParallaxText from "@/components/KineticParallaxText";
@@ -15,12 +13,6 @@ export default function Home() {
       <main className="flex-1 flex flex-col bg-black overflow-x-clip">
         {/* Starts with the fullscreen trophy hero section */}
         <Hero />
-        
-        {/* Pinned/revealed bento board containing biography & metrics */}
-        <About />
-        
-        {/* Chronological horizontal progress timeline */}
-        <HorizontalTimeline />
         
         {/* Tech Stack containing skills & DevOps tools */}
         <TechStack />
