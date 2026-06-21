@@ -36,4 +36,4 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 ---
-*Atualizado com automação de Status do WhatsApp e posts do LinkedIn automáticos baseados nos commits diários.*
+*Atualizado com automação de Status do WhatsApp e posts do LinkedIn automáticos baseados nos commits diários (v2).*
