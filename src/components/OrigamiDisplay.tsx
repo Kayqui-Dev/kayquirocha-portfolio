@@ -69,6 +69,9 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
       smoothedProgress.current += (activeProgress - smoothedProgress.current) * 0.15;
 
       // 2. Force the video playhead directly to the exact frame (zero delay, scrubbed timeline)
+      if (!video.paused) {
+        video.pause();
+      }
       video.currentTime = smoothedProgress.current * video.duration;
 
       // 3. Opacity transitions (fade-in / fade-out) based on smoothed progress

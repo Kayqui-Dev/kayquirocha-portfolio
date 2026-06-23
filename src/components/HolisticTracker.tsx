@@ -85,6 +85,57 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
             return;
           }
 
+          // 1. Calculate fist progress first (2D scale-invariant logic based on tip-to-knuckle distance)
+          const calculateFistProgress = (landmarks: any) => {
+            const wrist = landmarks[0];
+            const middleMCP = landmarks[9];
+            const indexTip = landmarks[8];
+            const middleTip = landmarks[12];
+            const ringTip = landmarks[16];
+            const pinkyTip = landmarks[20];
+            
+            if (!wrist || !middleMCP || !indexTip || !middleTip || !ringTip || !pinkyTip) return 0;
+            
+            // 2D distance calculation (ignores noisy Z depth axis for high stability)
+            const getDistance2D = (p1: any, p2: any) => {
+              return Math.sqrt(
+                Math.pow(p1.x - p2.x, 2) +
+                Math.pow(p1.y - p2.y, 2)
+              );
+            };
+            
+            const L_palm = getDistance2D(wrist, middleMCP);
+            if (L_palm <= 0) return 0;
+            
+            // Calculate distance of finger tips to their respective MCP (knuckle) joints
+            const dIndex = getDistance2D(indexTip, landmarks[5]) / L_palm;
+            const dMiddle = getDistance2D(middleTip, landmarks[9]) / L_palm;
+            const dRing = getDistance2D(ringTip, landmarks[13]) / L_palm;
+            const dPinky = getDistance2D(pinkyTip, landmarks[17]) / L_palm;
+            
+            const avgRatio = (dIndex + dMiddle + dRing + dPinky) / 4;
+            
+            // Open hand tip-to-knuckle ratio is around 1.25, closed hand (fist) ratio is around 0.45
+            const maxRatio = 1.25;
+            const minRatio = 0.45;
+            const progress = (maxRatio - avgRatio) / (maxRatio - minRatio);
+            return Math.max(0, Math.min(1, progress));
+          };
+
+          let leftProgress = 0;
+          let rightProgress = 0;
+
+          if (results.leftHandLandmarks) {
+            leftProgress = calculateFistProgress(results.leftHandLandmarks);
+          }
+          if (results.rightHandLandmarks) {
+            rightProgress = calculateFistProgress(results.rightHandLandmarks);
+          }
+
+          const currentMaxProgress = Math.max(leftProgress, rightProgress);
+          fistProgress.current = currentMaxProgress;
+
+          // 2. Draw canvas overlays
           ctx.save();
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -96,79 +147,38 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
             });
           }
 
+          // If fist is closed (progress > 0.65), make it glow neon green and white (brilhar)
+          const isFistClosed = currentMaxProgress > 0.65;
+          const handColor = isFistClosed ? "#00FFC2" : "#00A3FF";
+          const handWidth = isFistClosed ? 3.0 : 1.5;
+          const pointColor = isFistClosed ? "#FFFFFF" : "#00FFC2";
+          const pointRadius = isFistClosed ? 4 : 2;
+
           if (results.leftHandLandmarks) {
             mpDraw.drawConnectors(ctx, results.leftHandLandmarks, mpHolistic.HAND_CONNECTIONS, {
-              color: "#00A3FF",
-              lineWidth: 1.5
+              color: handColor,
+              lineWidth: handWidth
             });
             mpDraw.drawLandmarks(ctx, results.leftHandLandmarks, {
-              color: "#00FFC2",
+              color: pointColor,
               lineWidth: 1,
-              radius: 2
+              radius: pointRadius
             });
           }
 
           if (results.rightHandLandmarks) {
             mpDraw.drawConnectors(ctx, results.rightHandLandmarks, mpHolistic.HAND_CONNECTIONS, {
-              color: "#00A3FF",
-              lineWidth: 1.5
+              color: handColor,
+              lineWidth: handWidth
             });
             mpDraw.drawLandmarks(ctx, results.rightHandLandmarks, {
-              color: "#00FFC2",
+              color: pointColor,
               lineWidth: 1,
-              radius: 2
+              radius: pointRadius
             });
           }
 
           ctx.restore();
-
-          let leftProgress = 0;
-          let rightProgress = 0;
-
-          const calculateFistProgress = (landmarks: any) => {
-            const wrist = landmarks[0];
-            const middleMCP = landmarks[9];
-            const indexTip = landmarks[8];
-            const middleTip = landmarks[12];
-            const ringTip = landmarks[16];
-            const pinkyTip = landmarks[20];
-            
-            if (!wrist || !middleMCP || !indexTip || !middleTip || !ringTip || !pinkyTip) return 0;
-            
-            const getDistance = (p1: any, p2: any) => {
-              return Math.sqrt(
-                Math.pow(p1.x - p2.x, 2) +
-                Math.pow(p1.y - p2.y, 2) +
-                Math.pow(p1.z - p2.z, 2)
-              );
-            };
-            
-            const L_palm = getDistance(wrist, middleMCP);
-            if (L_palm <= 0) return 0;
-            
-            // Calculate ratio of finger tips to wrist normalized by palm length
-            const rIndex = getDistance(wrist, indexTip) / L_palm;
-            const rMiddle = getDistance(wrist, middleTip) / L_palm;
-            const rRing = getDistance(wrist, ringTip) / L_palm;
-            const rPinky = getDistance(wrist, pinkyTip) / L_palm;
-            
-            const avgRatio = (rIndex + rMiddle + rRing + rPinky) / 4;
-            
-            // Scale-invariant normalization: open hand avgRatio ~2.1, closed hand (fist) ~1.35
-            const maxRatio = 2.1;
-            const minRatio = 1.35;
-            const progress = (maxRatio - avgRatio) / (maxRatio - minRatio);
-            return Math.max(0, Math.min(1, progress));
-          };
-
-          if (results.leftHandLandmarks) {
-            leftProgress = calculateFistProgress(results.leftHandLandmarks);
-          }
-          if (results.rightHandLandmarks) {
-            rightProgress = calculateFistProgress(results.rightHandLandmarks);
-          }
-
-          fistProgress.current = Math.max(leftProgress, rightProgress);
         });
 
         holisticRef.current = holisticInstance;
