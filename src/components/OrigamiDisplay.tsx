@@ -59,20 +59,28 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
       if (!video || isNaN(video.duration) || video.duration === 0) return;
 
       const cameraProgress = fistProgress.current;
-      if (cameraProgress > 0 && !isCameraActive) {
+      const isReady = cameraProgress !== -1;
+
+      if (isReady && !isCameraActive) {
         setIsCameraActive(true);
       }
 
-      const activeProgress = cameraProgress > 0 ? cameraProgress : localProgress;
+      const activeProgress = isReady ? cameraProgress : localProgress;
 
       // 1. Linear Interpolation (Lerp) for smooth progress catching up
       smoothedProgress.current += (activeProgress - smoothedProgress.current) * 0.15;
 
       // 2. Force the video playhead directly to the exact frame (zero delay, scrubbed timeline)
       if (!video.paused) {
-        video.pause();
+        video.play().then(() => video.pause()).catch(() => {});
       }
-      video.currentTime = smoothedProgress.current * video.duration;
+      
+      const targetTime = smoothedProgress.current * video.duration;
+      // Only set currentTime if the video decoder is not already busy seeking,
+      // and the difference is greater than ~16ms (one frame at 60fps).
+      if (!video.seeking && Math.abs(video.currentTime - targetTime) > 0.016) {
+        video.currentTime = targetTime;
+      }
 
       // 3. Opacity transitions (fade-in / fade-out) based on smoothed progress
       if (smoothedProgress.current > 0.05) {
@@ -121,14 +129,13 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
     };
   }, [fistProgress, localProgress, isCameraActive]);
 
-  // Mouse fallback scrubbing
+  // Mouse & Touch fallback scrubbing
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Only use mouse fallback if progress from camera is 0
-      if (fistProgress.current === 0) {
+      if (fistProgress.current === -1) {
         const rect = container.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const normalized = Math.max(0, Math.min(1, x / rect.width));
@@ -136,9 +143,34 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
       }
     };
 
+    const handleTouchStart = (e: TouchEvent) => {
+      if (fistProgress.current === -1 && e.touches.length > 0) {
+        const rect = container.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const normalized = Math.max(0, Math.min(1, x / rect.width));
+        setLocalProgress(normalized);
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (fistProgress.current === -1 && e.touches.length > 0) {
+        const rect = container.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const normalized = Math.max(0, Math.min(1, x / rect.width));
+        setLocalProgress(normalized);
+      }
+    };
+
     container.addEventListener("mousemove", handleMouseMove);
+    container.addEventListener("touchstart", handleTouchStart, { passive: true });
+    container.addEventListener("touchmove", handleTouchMove, { passive: true });
+
     return () => {
       container.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
     };
   }, [fistProgress]);
 

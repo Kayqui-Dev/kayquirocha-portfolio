@@ -8,7 +8,7 @@ const HolisticTracker = dynamic(() => import("@/components/HolisticTracker"), { 
 const OrigamiDisplay = dynamic(() => import("@/components/OrigamiDisplay"), { ssr: false });
 
 export default function Home() {
-  const fistProgress = useRef<number>(0);
+  const fistProgress = useRef<number>(-1);
 
   return (
     <main className="grid grid-cols-1 md:grid-cols-2 h-screen w-full bg-[#0a0a0a] text-white overflow-hidden">

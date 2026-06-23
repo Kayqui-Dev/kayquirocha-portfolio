@@ -141,16 +141,16 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
 
           const mpDraw = (window as any);
           if (results.faceLandmarks) {
-            mpDraw.drawConnectors(ctx, results.faceLandmarks, mpHolistic.FACEMESH_CONTOURS, {
-              color: "rgba(0, 163, 255, 0.35)",
-              lineWidth: 1.0
+            mpDraw.drawConnectors(ctx, results.faceLandmarks, mpHolistic.FACEMESH_TESSELATION, {
+              color: "rgba(0, 163, 255, 0.15)",
+              lineWidth: 0.5
             });
           }
 
-          // If fist is closed (progress > 0.65), make it glow neon green and white (brilhar)
+          // Draw hand landmarks in bright neon green (#00FFC2) for visibility
           const isFistClosed = currentMaxProgress > 0.65;
-          const handColor = isFistClosed ? "#00FFC2" : "#00A3FF";
-          const handWidth = isFistClosed ? 3.0 : 1.5;
+          const handColor = "#00FFC2";
+          const handWidth = isFistClosed ? 4.0 : 2.0;
           const pointColor = isFistClosed ? "#FFFFFF" : "#00FFC2";
           const pointRadius = isFistClosed ? 4 : 2;
 
