@@ -16,11 +16,35 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
   const [localProgress, setLocalProgress] = useState(0);
   const [isCameraActive, setIsCameraActive] = useState(false);
 
-  // Force video to pause on mount to prevent native autonomous playback
+  // Force video to pause and run warmup on first user gesture (touch/click) to unlock seeking in iOS/Android
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.pause();
+
+    const warmup = () => {
+      video.play()
+        .then(() => {
+          video.pause();
+          console.log("Video warmed up successfully");
+        })
+        .catch(err => {
+          console.log("Video warmup failed/waiting for gesture:", err);
+        });
+      
+      // Clean up event listeners once warmup has run once
+      document.removeEventListener("click", warmup);
+      document.removeEventListener("touchstart", warmup);
+    };
+
+    document.addEventListener("click", warmup);
+    document.addEventListener("touchstart", warmup, { passive: true });
+
+    return () => {
+      document.removeEventListener("click", warmup);
+      document.removeEventListener("touchstart", warmup);
+    };
   }, []);
 
   // Scrub and transition based on fist progress using GSAP Ticker (60FPS Lerp + frame control)
