@@ -1,82 +1,26 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import Statement from "@/components/Statement";
-import About from "@/components/About";
-import ProjectGallery from "@/components/ProjectGallery";
-import WrestlingMindset from "@/components/WrestlingMindset";
-import Footer from "@/components/Footer";
+import { useRef } from "react";
+import dynamic from "next/dynamic";
 
-gsap.registerPlugin(ScrollTrigger);
+// Dynamically load the MediaPipe tracking and Origami display components with SSR disabled
+const HolisticTracker = dynamic(() => import("@/components/HolisticTracker"), { ssr: false });
+const OrigamiDisplay = dynamic(() => import("@/components/OrigamiDisplay"), { ssr: false });
 
 export default function Home() {
-  const globalWrapperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const wrapper = globalWrapperRef.current;
-    if (!wrapper) return;
-
-    const ctx = gsap.context(() => {
-      // 1. Transition to LIGHT mode when entering ProjectGallery
-      gsap.to([wrapper, "#project-gallery"], {
-        backgroundColor: "#E3E2DC", // Premium cream tone
-        color: "#1C1C1C", // Dark text
-        scrollTrigger: {
-          trigger: "#project-gallery",
-          start: "top center",
-          end: "top top",
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      // 2. Transition back to DARK mode when leaving ProjectGallery into About
-      gsap.to([wrapper, "#project-gallery"], {
-        backgroundColor: "#000000", // Back to deep dark
-        color: "#f4f4f5", // Light text
-        scrollTrigger: {
-          trigger: "#project-gallery",
-          start: "bottom center",
-          end: "bottom top",
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      });
-    }, wrapper);
-
-    return () => ctx.revert();
-  }, []);
+  const fistProgress = useRef<number>(0);
 
   return (
-    <>
-      <Header />
-      <main
-        ref={globalWrapperRef}
-        id="global-wrapper"
-        className="bg-black text-[#f4f4f5] relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.8)] w-full overflow-x-hidden"
-      >
-        {/* Starts with the fullscreen trophy hero section */}
-        <Hero />
-        
-        {/* Giant typography statement (phrase) */}
-        <Statement />
-        
-        {/* Seção 01 / Galeria de Projetos */}
-        <ProjectGallery />
-        
-        {/* Seção 02 / Sobre Mim */}
-        <About />
+    <main className="grid grid-cols-1 md:grid-cols-2 h-screen w-full bg-[#0a0a0a] text-white overflow-hidden">
+      {/* Left Column: Holistic Tracking Feed */}
+      <section className="relative w-full h-[50vh] md:h-full overflow-hidden">
+        <HolisticTracker fistProgress={fistProgress} />
+      </section>
 
-        {/* Seção 03 / Mindset de Atleta */}
-        <WrestlingMindset />
-      </main>
-      
-      {/* Sticky Footer Reveal (reveals from behind main container) */}
-      <Footer />
-    </>
+      {/* Right Column: Origami Interactive Display */}
+      <section className="relative w-full h-[50vh] md:h-full overflow-hidden">
+        <OrigamiDisplay fistProgress={fistProgress} />
+      </section>
+    </main>
   );
 }

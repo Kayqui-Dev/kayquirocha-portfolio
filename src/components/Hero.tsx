@@ -7,7 +7,11 @@ import gsap from "gsap";
 
 
 
-export default function Hero() {
+interface HeroProps {
+  onStartExperience?: () => void;
+}
+
+export default function Hero({ onStartExperience }: HeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -376,6 +380,16 @@ export default function Hero() {
                 </p>
               </div>
             </motion.div>
+            
+            {/* Start Hand-tracking experience button */}
+            {onStartExperience && (
+              <button
+                onClick={onStartExperience}
+                className="absolute bottom-[-55px] left-1/2 -translate-x-1/2 bg-black/90 hover:bg-[#00A3FF] text-[#00A3FF] hover:text-white border border-[#00A3FF]/40 rounded-full px-5 py-2 text-[10px] font-mono uppercase tracking-widest backdrop-blur-sm transition-all duration-300 shadow-[0_0_15px_rgba(0,163,255,0.15)] hover:shadow-[0_0_25px_rgba(0,163,255,0.45)] cursor-pointer z-30 pointer-events-auto"
+              >
+                ✦ Ativar Visão IA (Gestos)
+              </button>
+            )}
           </motion.div>
         </div>
 

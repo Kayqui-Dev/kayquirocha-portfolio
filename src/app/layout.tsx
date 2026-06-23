@@ -19,33 +19,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kayqui Rocha | Full-Stack Developer & Atleta de Wrestling",
-  description: "Portfólio pessoal de Kayqui Rocha Godinho. Desenvolvedor Full-Stack & Atleta de Luta Livre Olímpica (Wrestling). Unindo a resiliência e disciplina do esporte de combate com a precisão do desenvolvimento web moderno.",
+  title: "Kayqui Origami | Interação IA & Force Crush",
+  description: "Uma experiência interativa tridimensional de origami utilizando visão computacional (MediaPipe Holistic) e animações GSAP.",
   keywords: [
-    "Kayqui Rocha Godinho",
     "Kayqui Rocha",
-    "Desenvolvedor Full-Stack",
-    "Full-Stack Developer",
-    "Next.js Portfolio",
-    "Wrestling Atleta",
-    "Luta Livre Olimpica",
-    "Kodava Solutions",
-    "Supabase",
-    "n8n",
-    "IA",
+    "Origami",
+    "MediaPipe",
+    "Holistic Tracking",
+    "GSAP",
+    "Force Crush",
+    "Webcam Interaction",
+    "Creative Development"
   ],
   authors: [{ name: "Kayqui Rocha Godinho" }],
   creator: "Kayqui Rocha Godinho",
   openGraph: {
-    title: "Kayqui Rocha | Full-Stack Developer & Atleta de Wrestling",
-    description: "Unindo a resiliência do esporte de combate com a precisão do desenvolvimento web.",
+    title: "Kayqui Origami | Interação IA & Force Crush",
+    description: "Uma experiência interativa tridimensional de origami utilizando visão computacional.",
     type: "website",
     locale: "pt_BR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kayqui Rocha | Full-Stack Developer & Atleta de Wrestling",
-    description: "Unindo a resiliência do esporte de combate com a precisão do desenvolvimento web.",
+    title: "Kayqui Origami | Interação IA & Force Crush",
+    description: "Uma experiência interativa tridimensional de origami utilizando visão computacional.",
   },
 };
 
@@ -57,12 +54,13 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
     >
       <head>
         <meta name="color-scheme" content="dark" />
       </head>
-      <body className="min-h-screen flex flex-col bg-[#000000] text-[#f4f4f5]">
+      <body suppressHydrationWarning className="min-h-screen flex flex-col bg-[#000000] text-[#f4f4f5]">
         <SmoothScroll />
         {children}
       </body>
