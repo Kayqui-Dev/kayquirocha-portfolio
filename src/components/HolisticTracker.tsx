@@ -64,8 +64,8 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
           enableSegmentation: false,
           smoothSegmentation: false,
           refineFaceLandmarks: false,
-          minDetectionConfidence: 0.75, // Higher threshold to avoid body/background false detections
-          minTrackingConfidence: 0.75   // Higher threshold to maintain stable hand tracking
+          minDetectionConfidence: 0.58, // Balanced threshold to prevent dropouts while rejecting random body noise
+          minTrackingConfidence: 0.58   // Balanced tracking threshold for stability in medium/low lighting
         });
 
         holisticInstance.onResults((results: any) => {
@@ -98,7 +98,7 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
             const wrist = landmarks[0];
             const middleMCP = landmarks[9];
             if (!wrist || !middleMCP) return false;
-            return getDistance2D(wrist, middleMCP) >= 0.045;
+            return getDistance2D(wrist, middleMCP) >= 0.032; // Lowered to 0.032 to support mobile distance tracking
           };
 
           // Calculate fist progress (2D scale-invariant logic based on tip-to-knuckle distance)
@@ -123,9 +123,10 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
             
             const avgRatio = (dIndex + dMiddle + dRing + dPinky) / 4;
             
-            // Open hand tip-to-knuckle ratio is around 1.25, closed hand (fist) ratio is around 0.45
-            const maxRatio = 1.25;
-            const minRatio = 0.45;
+            // Adjusted thresholds: maxRatio of 1.10 ensures relaxed/open hands map to exactly 0,
+            // minRatio of 0.55 makes closed fist map to 1.0 reliably without straining.
+            const maxRatio = 1.10;
+            const minRatio = 0.55;
             const progress = (maxRatio - avgRatio) / (maxRatio - minRatio);
             return Math.max(0, Math.min(1, progress));
           };

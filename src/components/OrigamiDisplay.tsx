@@ -103,7 +103,7 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
       }
 
       // 3. Opacity transitions (fade placeholder out and show canvas)
-      if (smoothedProgress.current > 0.05) {
+      if (smoothedProgress.current > 0.10) {
         if (!imageFadedOut) {
           imageFadedOut = true;
           // Fade out the static placeholder image
