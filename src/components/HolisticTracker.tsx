@@ -64,8 +64,8 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
           enableSegmentation: false,
           smoothSegmentation: false,
           refineFaceLandmarks: false,
-          minDetectionConfidence: 0.5,
-          minTrackingConfidence: 0.5
+          minDetectionConfidence: 0.75, // Higher threshold to avoid body/background false detections
+          minTrackingConfidence: 0.75   // Higher threshold to maintain stable hand tracking
         });
 
         holisticInstance.onResults((results: any) => {
@@ -85,7 +85,23 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
             return;
           }
 
-          // 1. Calculate fist progress first (2D scale-invariant logic based on tip-to-knuckle distance)
+          // 2D distance calculation helper
+          const getDistance2D = (p1: any, p2: any) => {
+            return Math.sqrt(
+              Math.pow(p1.x - p2.x, 2) +
+              Math.pow(p1.y - p2.y, 2)
+            );
+          };
+
+          // Filter out small false positive detections (e.g. background or body noise)
+          const isRealHand = (landmarks: any) => {
+            const wrist = landmarks[0];
+            const middleMCP = landmarks[9];
+            if (!wrist || !middleMCP) return false;
+            return getDistance2D(wrist, middleMCP) >= 0.045;
+          };
+
+          // Calculate fist progress (2D scale-invariant logic based on tip-to-knuckle distance)
           const calculateFistProgress = (landmarks: any) => {
             const wrist = landmarks[0];
             const middleMCP = landmarks[9];
@@ -95,14 +111,6 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
             const pinkyTip = landmarks[20];
             
             if (!wrist || !middleMCP || !indexTip || !middleTip || !ringTip || !pinkyTip) return 0;
-            
-            // 2D distance calculation (ignores noisy Z depth axis for high stability)
-            const getDistance2D = (p1: any, p2: any) => {
-              return Math.sqrt(
-                Math.pow(p1.x - p2.x, 2) +
-                Math.pow(p1.y - p2.y, 2)
-              );
-            };
             
             const L_palm = getDistance2D(wrist, middleMCP);
             if (L_palm <= 0) return 0;
@@ -125,29 +133,42 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
           let leftProgress = 0;
           let rightProgress = 0;
 
-          if (results.leftHandLandmarks) {
+          const hasLeft = results.leftHandLandmarks && isRealHand(results.leftHandLandmarks);
+          const hasRight = results.rightHandLandmarks && isRealHand(results.rightHandLandmarks);
+
+          if (hasLeft) {
             leftProgress = calculateFistProgress(results.leftHandLandmarks);
           }
-          if (results.rightHandLandmarks) {
+          if (hasRight) {
             rightProgress = calculateFistProgress(results.rightHandLandmarks);
           }
 
           const currentMaxProgress = Math.max(leftProgress, rightProgress);
-          fistProgress.current = currentMaxProgress;
+          
+          // Set to progress if hand is in view, or reset to -1 if no hand is detected
+          if (hasLeft || hasRight) {
+            fistProgress.current = currentMaxProgress;
+          } else {
+            fistProgress.current = -1; // Switch back to local mouse/touch control if no hand is in frame
+          }
 
           // 2. Draw canvas overlays
           ctx.save();
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           const mpDraw = (window as any);
-          // Draw hand landmarks in bright neon green (#00FFC2) for visibility
+          
+          // Glowing sci-fi neon effect
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = "#00FFC2";
+
           const isFistClosed = currentMaxProgress > 0.65;
           const handColor = "#00FFC2";
-          const handWidth = isFistClosed ? 4.0 : 2.0;
-          const pointColor = "#00FFC2"; // Keep points neon green/cyan in both states, no white dots!
-          const pointRadius = isFistClosed ? 4 : 2;
+          const handWidth = isFistClosed ? 3.5 : 1.5;
+          const pointColor = "#00FFC2";
+          const pointRadius = isFistClosed ? 2.5 : 1.5; // Neat and tiny points, no white dots!
 
-          if (results.leftHandLandmarks) {
+          if (hasLeft) {
             mpDraw.drawConnectors(ctx, results.leftHandLandmarks, mpHolistic.HAND_CONNECTIONS, {
               color: handColor,
               lineWidth: handWidth
@@ -159,7 +180,7 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
             });
           }
 
-          if (results.rightHandLandmarks) {
+          if (hasRight) {
             mpDraw.drawConnectors(ctx, results.rightHandLandmarks, mpHolistic.HAND_CONNECTIONS, {
               color: handColor,
               lineWidth: handWidth
@@ -218,12 +239,18 @@ export default function HolisticTracker({ fistProgress }: HolisticTrackerProps) 
     };
 
     let isProcessing = false;
+    let lastProcessedTime = 0;
+    const FRAME_INTERVAL = 70; // 70ms interval = ~14 FPS hand tracking (smooth & saves mobile CPU/GPU)
+
     const tick = async () => {
       if (!active) return;
       const video = videoRef.current;
+      const now = performance.now();
+
       if (video && video.readyState >= 2 && holisticRef.current) {
-        if (!isProcessing) {
+        if (!isProcessing && (now - lastProcessedTime >= FRAME_INTERVAL)) {
           isProcessing = true;
+          lastProcessedTime = now;
           try {
             await holisticRef.current.send({ image: video });
           } catch (err) {

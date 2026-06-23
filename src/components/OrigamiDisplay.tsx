@@ -9,80 +9,47 @@ interface OrigamiDisplayProps {
 
 export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const imagesRef = useRef<HTMLImageElement[]>([]);
   const smoothedProgress = useRef(0);
   const [localProgress, setLocalProgress] = useState(0);
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const [loadedCount, setLoadedCount] = useState(0);
 
-  // Force video to pause and run warmup to unlock seeking in iOS/Android
+  // Preload frames (64 frames sequence for optimal mobile memory & smooth load)
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const totalFrames = 64;
+    const imgs: HTMLImageElement[] = [];
+    let loaded = 0;
 
-    // Force load the video source
-    video.load();
-
-    // 1. Programmatic Muted Autoplay Warmup: Attempt to play immediately on mount (often allowed because it's muted)
-    video.play()
-      .then(() => {
-        video.pause();
-        console.log("Immediate video warmup succeeded, duration:", video.duration);
-      })
-      .catch(err => {
-        console.log("Immediate video warmup blocked, waiting for user gesture:", err);
-      });
-
-    // 2. Gesture Fallback: warmup on first touch or click
-    const warmup = () => {
-      if (video.paused) {
-        video.play()
-          .then(() => {
-            video.pause();
-            console.log("Video warmed up via gesture, duration:", video.duration);
-          })
-          .catch(err => {
-            console.log("Video gesture warmup failed:", err);
-          });
-      }
-      
-      // Clean up event listeners once warmup has run once
-      document.removeEventListener("click", warmup);
-      document.removeEventListener("touchstart", warmup);
-    };
-
-    document.addEventListener("click", warmup);
-    document.addEventListener("touchstart", warmup, { passive: true });
-
-    // 3. Play-Pause Hack on Seeked to force iOS Safari to render frame changes while paused
-    const handleSeeked = () => {
-      if (video.paused) {
-        video.play()
-          .then(() => {
-            video.pause();
-          })
-          .catch(() => {});
-      }
-    };
-    video.addEventListener("seeked", handleSeeked);
-
-    return () => {
-      document.removeEventListener("click", warmup);
-      document.removeEventListener("touchstart", warmup);
-      video.removeEventListener("seeked", handleSeeked);
-    };
+    for (let i = 0; i < totalFrames; i++) {
+      const img = new Image();
+      // Map 64 indices to the 192 available video frames, ensuring the last maps to frame 192
+      const frameIndex = i === totalFrames - 1 ? 192 : (i * 3 + 1);
+      const frameNum = String(frameIndex).padStart(3, "0");
+      img.src = `/frames/frame_${frameNum}.jpg`;
+      img.onload = () => {
+        loaded++;
+        setLoadedCount(loaded);
+      };
+      imgs.push(img);
+    }
+    imagesRef.current = imgs;
   }, []);
 
-  // Scrub and transition based on fist progress using GSAP Ticker (60FPS Lerp + frame control)
+  // Draw current frame to canvas using GSAP Ticker (60FPS Lerp + Canvas rendering)
   useEffect(() => {
-    const video = videoRef.current;
+    const canvas = canvasRef.current;
     const image = imageRef.current;
-    if (!video || !image) return;
+    if (!canvas || !image) return;
 
     let imageFadedOut = false;
 
     const tick = () => {
-      if (!video || isNaN(video.duration) || video.duration === 0) return;
+      const totalFrames = 64;
+      const images = imagesRef.current;
+      if (images.length < totalFrames || loadedCount < totalFrames) return;
 
       const cameraProgress = fistProgress.current;
       const isReady = cameraProgress !== -1;
@@ -96,31 +63,58 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
       // 1. Linear Interpolation (Lerp) for smooth progress catching up
       smoothedProgress.current += (activeProgress - smoothedProgress.current) * 0.15;
 
-      // 2. Force the video playhead directly to the exact frame (zero delay, scrubbed timeline)
-      if (!video.paused) {
-        video.play().then(() => video.pause()).catch(() => {});
-      }
-      
-      const targetTime = smoothedProgress.current * video.duration;
-      // Only set currentTime if the video decoder is not already busy seeking,
-      // and the difference is greater than ~16ms (one frame at 60fps).
-      if (!video.seeking && Math.abs(video.currentTime - targetTime) > 0.016) {
-        video.currentTime = targetTime;
+      // 2. Render frame onto canvas
+      const frameIndex = Math.min(totalFrames - 1, Math.max(0, Math.round(smoothedProgress.current * (totalFrames - 1))));
+      const activeImage = images[frameIndex];
+
+      const ctx = canvas.getContext("2d");
+      if (ctx && activeImage && activeImage.complete && activeImage.naturalWidth > 0) {
+        // Ensure canvas internal resolution matches its display size
+        if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
+          canvas.width = canvas.clientWidth;
+          canvas.height = canvas.clientHeight;
+        }
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Object-cover scaling calculations
+        const imgW = activeImage.naturalWidth;
+        const imgH = activeImage.naturalHeight;
+        const canvasW = canvas.width;
+        const canvasH = canvas.height;
+
+        const imgRatio = imgW / imgH;
+        const canvasRatio = canvasW / canvasH;
+
+        let drawW = canvasW;
+        let drawH = canvasH;
+        let drawX = 0;
+        let drawY = 0;
+
+        if (imgRatio > canvasRatio) {
+          drawW = canvasH * imgRatio;
+          drawX = (canvasW - drawW) / 2;
+        } else {
+          drawH = canvasW / imgRatio;
+          drawY = (canvasH - drawH) / 2;
+        }
+
+        ctx.drawImage(activeImage, drawX, drawY, drawW, drawH);
       }
 
-      // 3. Opacity transitions (fade-in / fade-out) based on smoothed progress
+      // 3. Opacity transitions (fade placeholder out and show canvas)
       if (smoothedProgress.current > 0.05) {
         if (!imageFadedOut) {
           imageFadedOut = true;
-          // Fade out the static image
+          // Fade out the static placeholder image
           gsap.to(image, {
             opacity: 0,
             duration: 0.4,
             ease: "power2.out",
             overwrite: "auto"
           });
-          // Fade in the video
-          gsap.to(video, {
+          // Fade in the canvas
+          gsap.to(canvas, {
             opacity: 0.85,
             duration: 0.4,
             ease: "power2.out",
@@ -130,15 +124,15 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
       } else {
         if (imageFadedOut) {
           imageFadedOut = false;
-          // Fade in the static image
+          // Fade in the static placeholder image
           gsap.to(image, {
             opacity: 1,
             duration: 0.4,
             ease: "power2.out",
             overwrite: "auto"
           });
-          // Fade out the video
-          gsap.to(video, {
+          // Fade out the canvas
+          gsap.to(canvas, {
             opacity: 0,
             duration: 0.4,
             ease: "power2.out",
@@ -153,7 +147,7 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
     return () => {
       gsap.ticker.remove(tick);
     };
-  }, [fistProgress, localProgress, isCameraActive]);
+  }, [fistProgress, localProgress, isCameraActive, loadedCount]);
 
   // Mouse & Touch fallback scrubbing
   useEffect(() => {
@@ -210,18 +204,14 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
 
       {/* 9:16 Aspect Ratio Centered Frame */}
       <div className="relative aspect-[9/16] h-[75vh] max-h-[80%] rounded-2xl overflow-hidden border border-zinc-800/80 bg-black/40 shadow-[0_20px_50px_rgba(0,0,0,0.8)] z-10">
-        {/* Origami Crumpling Video */}
-        <video
-          ref={videoRef}
-          src="/origami_crumple_smooth.mp4"
-          muted
-          playsInline
-          preload="auto"
+        {/* Canvas for butter-smooth frame sequence rendering */}
+        <canvas
+          ref={canvasRef}
           className="absolute inset-0 w-full h-full object-cover z-0"
-          style={{ opacity: 0.01 }}
+          style={{ opacity: 0 }}
         />
 
-        {/* Static Origami Base Image */}
+        {/* Static Origami Base Image (Placeholder during load) */}
         <div ref={imageRef} className="origami-static-img absolute inset-0 w-full h-full z-10 pointer-events-none">
           <img
             src="/imagen_origami.png"
@@ -229,6 +219,14 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
             className="w-full h-full object-cover filter brightness-95 contrast-105"
           />
         </div>
+        
+        {/* Preloading indicator */}
+        {loadedCount < 64 && (
+          <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-30 font-mono text-[9px] text-[#00FFC2] uppercase tracking-[0.2em]">
+            <div className="w-5 h-5 border border-current border-t-transparent rounded-full animate-spin mb-3" />
+            <span>Carregando ({Math.round((loadedCount / 64) * 100)}%)</span>
+          </div>
+        )}
         
         {/* Ambient Grid overlay to match design theme */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(0,163,255,0.03),rgba(0,0,0,0),rgba(0,163,255,0.03))] bg-[size:100%_4px,3px_100%] pointer-events-none z-20 opacity-30" />
@@ -243,7 +241,7 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
           Feche a Mão para Destruir
         </h2>
         <p className="text-[8px] font-mono uppercase tracking-widest text-zinc-500 mt-3 font-bold">
-          {isCameraActive ? "Gestos Ativos por IA" : "Mova o mouse horizontalmente como Fallback"}
+          {isCameraActive ? "Gestos Ativos por IA" : "Mova o mouse ou arraste no mobile como Fallback"}
         </p>
       </div>
     </div>
