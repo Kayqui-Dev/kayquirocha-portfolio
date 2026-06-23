@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import Image from "next/image";
 
 interface OrigamiDisplayProps {
   fistProgress: React.MutableRefObject<number>;
@@ -16,22 +15,36 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
   const [localProgress, setLocalProgress] = useState(0);
   const [isCameraActive, setIsCameraActive] = useState(false);
 
-  // Force video to pause and run warmup on first user gesture (touch/click) to unlock seeking in iOS/Android
+  // Force video to pause and run warmup to unlock seeking in iOS/Android
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    video.pause();
+    // Force load the video source
+    video.load();
 
+    // 1. Programmatic Muted Autoplay Warmup: Attempt to play immediately on mount (often allowed because it's muted)
+    video.play()
+      .then(() => {
+        video.pause();
+        console.log("Immediate video warmup succeeded, duration:", video.duration);
+      })
+      .catch(err => {
+        console.log("Immediate video warmup blocked, waiting for user gesture:", err);
+      });
+
+    // 2. Gesture Fallback: warmup on first touch or click
     const warmup = () => {
-      video.play()
-        .then(() => {
-          video.pause();
-          console.log("Video warmed up successfully");
-        })
-        .catch(err => {
-          console.log("Video warmup failed/waiting for gesture:", err);
-        });
+      if (video.paused) {
+        video.play()
+          .then(() => {
+            video.pause();
+            console.log("Video warmed up via gesture, duration:", video.duration);
+          })
+          .catch(err => {
+            console.log("Video gesture warmup failed:", err);
+          });
+      }
       
       // Clean up event listeners once warmup has run once
       document.removeEventListener("click", warmup);
@@ -41,9 +54,22 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
     document.addEventListener("click", warmup);
     document.addEventListener("touchstart", warmup, { passive: true });
 
+    // 3. Play-Pause Hack on Seeked to force iOS Safari to render frame changes while paused
+    const handleSeeked = () => {
+      if (video.paused) {
+        video.play()
+          .then(() => {
+            video.pause();
+          })
+          .catch(() => {});
+      }
+    };
+    video.addEventListener("seeked", handleSeeked);
+
     return () => {
       document.removeEventListener("click", warmup);
       document.removeEventListener("touchstart", warmup);
+      video.removeEventListener("seeked", handleSeeked);
     };
   }, []);
 
@@ -192,17 +218,15 @@ export default function OrigamiDisplay({ fistProgress }: OrigamiDisplayProps) {
           playsInline
           preload="auto"
           className="absolute inset-0 w-full h-full object-cover z-0"
-          style={{ opacity: 0 }}
+          style={{ opacity: 0.01 }}
         />
 
         {/* Static Origami Base Image */}
         <div ref={imageRef} className="origami-static-img absolute inset-0 w-full h-full z-10 pointer-events-none">
-          <Image
+          <img
             src="/imagen_origami.png"
             alt="Origami Shape"
-            fill
-            priority
-            className="object-cover filter brightness-95 contrast-105"
+            className="w-full h-full object-cover filter brightness-95 contrast-105"
           />
         </div>
         
